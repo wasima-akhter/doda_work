@@ -8,7 +8,7 @@ class OnboardScreenMobile extends GetView<OnboardController> {
     return Scaffold(
       bottomNavigationBar: SafeArea(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.38,
+          // height: MediaQuery.of(context).size.height * 0.38,
           child: Column(
             mainAxisSize: mainMin,
             mainAxisAlignment: mainSpaceBet,
@@ -71,7 +71,7 @@ class OnboardScreenMobile extends GetView<OnboardController> {
           ),
         ),
       ),
-      appBar: CommonAppBar(title: '', isSkip: true,isBack: false,),
+      appBar: CommonAppBar(title: '', isSkip: true, isBack: false),
       body: SafeArea(
         child: Padding(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,

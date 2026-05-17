@@ -12,9 +12,9 @@ class AppBarLogoWidget extends StatelessWidget {
       onTap: onTap ?? () => Get.find<NavigationController>().goToProfile(),
       child: Image.asset(
         Assets.logo.aaplogo.path,
-        height: 90.r,
-        width: 90.r,
-        fit: BoxFit.contain,
+        height: 90.w,
+        width: 90.w,
+        fit: BoxFit.cover,
       ),
     );
   }

@@ -1,23 +1,23 @@
 import 'dart:io';
+
 import 'package:doda_work/core/helpers/helpers.dart';
 import 'package:doda_work/core/utils/basic_import.dart';
-import 'package:doda_work/routes/routes.dart';
 import 'package:doda_work/widgets/custom_drop_down_widget.dart';
 import 'package:doda_work/widgets/date_picker_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
+
 import '../../../widgets/location_picker_widget.dart';
+import '../../../widgets/notification_icon.dart';
 import '../../../widgets/time_picker_widget.dart';
 import '../../category/controller/category_controller.dart';
 import '../../navigation/controller/navigation_controller.dart';
 import '../controller/request_controller.dart';
-import 'package:intl/intl.dart';
-part '../widget/time_and_date_section_widget.dart';
-
-part '../widget/others_field_widget.dart';
 
 part '../widget/add_photo_box_widget.dart';
-
+part '../widget/others_field_widget.dart';
 part '../widget/request_info_card_widget.dart';
+part '../widget/time_and_date_section_widget.dart';
 
 class RequestScreen extends StatefulWidget {
   const RequestScreen({super.key});
@@ -76,30 +76,24 @@ class _RequestScreenState extends State<RequestScreen> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Obx(() => TextWidget(
-                      controller.currentStep.value == 2
-                          ? 'Request Preview'
-                          : 'Service Request',
-                      color: CustomColors.blackColor,
-                      fontSize: Dimensions.titleLarge,
-                      fontWeight: FontWeight.w500,
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      textOverflow: TextOverflow.ellipsis,
-                    )),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => Get.toNamed(Routes.notificationScreen),
-                  child: Container(
-                    padding: EdgeInsets.all(Dimensions.paddingSize * 0.35),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: CustomColors.primary),
+                    child: Obx(
+                      () => TextWidget(
+                        controller.currentStep.value == 2
+                            ? 'Request Preview'
+                            : 'Service Request',
+                        color: CustomColors.blackColor,
+                        fontSize: Dimensions.titleLarge,
+                        fontWeight: FontWeight.w500,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        textOverflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    child: SvgPicture.asset(Assets.icons.group),
                   ),
                 ),
+
+                /// NOTIFICATION ICON
+                NotificationIcon(),
               ],
             ),
           ),
@@ -211,16 +205,18 @@ class _RequestScreenState extends State<RequestScreen> {
           phone: phoneTextController.text,
         ),
         Space.height.v30,
-        Obx(() => PrimaryButtonWidget(
-          isLoading: controller.isLoading.value,
-          title: "Submit Request",
-          onPressed: () {
-            controller.bookingService(
-              customerPhone: phoneTextController.text,
-              description: descriptionTextController.text,
-            );
-          },
-        )),
+        Obx(
+          () => PrimaryButtonWidget(
+            isLoading: controller.isLoading.value,
+            title: "Submit Request",
+            onPressed: () {
+              controller.bookingService(
+                customerPhone: phoneTextController.text,
+                description: descriptionTextController.text,
+              );
+            },
+          ),
+        ),
         Space.height.v10,
         TextButton(
           onPressed: () => controller.currentStep.value = 1,
@@ -243,7 +239,9 @@ class _RequestScreenState extends State<RequestScreen> {
             height: 6,
             margin: EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
-              color: index <= step ? CustomColors.primary : CustomColors.disableColor,
+              color: index <= step
+                  ? CustomColors.primary
+                  : CustomColors.disableColor,
               borderRadius: BorderRadius.circular(10),
             ),
           ),
@@ -252,4 +250,3 @@ class _RequestScreenState extends State<RequestScreen> {
     );
   }
 }
-

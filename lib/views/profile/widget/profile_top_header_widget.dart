@@ -1,4 +1,5 @@
 import 'package:shadify/shadify.dart';
+
 import '../../../core/utils/basic_import.dart';
 import '../../../routes/routes.dart';
 import '../controller/profile_controller.dart';
@@ -17,9 +18,8 @@ class ProfileTopHeaderWidgetView extends GetView<ProfileController> {
 
       // Profile image URL
 
-
       return Container(
-        height: cardHeight,
+        // height: cardHeight,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),
@@ -186,7 +186,7 @@ class ProfileTopWidgetView extends GetView<ProfileController> {
       final providerData = controller.providerProfileModel.value?.data;
 
       return Container(
-        height: cardHeight,
+        // height: cardHeight,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),
@@ -209,7 +209,9 @@ class ProfileTopWidgetView extends GetView<ProfileController> {
                 bottomLeft: Radius.circular(Dimensions.radius * 0.8),
               ),
               child: CachedNetworkImage(
-                imageUrl: providerData?.profileImage ?? 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png',
+                imageUrl:
+                    providerData?.profileImage ??
+                    'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png',
                 width: imageWidth * 0.85,
                 height: cardHeight,
                 fit: BoxFit.cover,
@@ -234,7 +236,8 @@ class ProfileTopWidgetView extends GetView<ProfileController> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextWidget(
-                      controller.providerProfileModel.value?.data.companyName ?? '',
+                      controller.providerProfileModel.value?.data.companyName ??
+                          '',
                       fontSize: Dimensions.titleSmall,
                       fontWeight: FontWeight.w500,
                       color: CustomColors.primary,
@@ -243,7 +246,13 @@ class ProfileTopWidgetView extends GetView<ProfileController> {
                     ),
                     Space.height.v5,
                     TextWidget(
-                      controller.providerProfileModel.value?.data.authId.email ?? '',
+                      controller
+                              .providerProfileModel
+                              .value
+                              ?.data
+                              .authId
+                              .email ??
+                          '',
                       fontSize: Dimensions.titleSmall,
                       fontWeight: FontWeight.w500,
                       color: CustomColors.primary,

@@ -1,6 +1,6 @@
 import '../../../core/utils/app_storage.dart';
 import '../../../core/utils/basic_import.dart';
-import '../../../routes/routes.dart';
+import '../../../widgets/notification_icon.dart';
 import '../../profile/controller/profile_controller.dart';
 
 class HomeAppBarWidgetView extends GetView<ProfileController> {
@@ -21,6 +21,7 @@ class HomeAppBarWidgetView extends GetView<ProfileController> {
             AppBarLogoWidget(),
 
             Space.width.v10,
+
             /// DIVIDER
             Container(
               height: 36.h,
@@ -36,7 +37,8 @@ class HomeAppBarWidgetView extends GetView<ProfileController> {
                 final isVendor = AppStorage.isProvider;
 
                 final userName = isVendor
-                    ? controller.providerProfileModel.value?.data.companyName ?? 'Provider'
+                    ? controller.providerProfileModel.value?.data.companyName ??
+                          'Provider'
                     : controller.userProfileModel.value?.data?.name ?? 'User';
 
                 return Column(
@@ -77,17 +79,7 @@ class HomeAppBarWidgetView extends GetView<ProfileController> {
             ),
 
             /// NOTIFICATION ICON
-            GestureDetector(
-              onTap: () => Get.toNamed(Routes.notificationScreen),
-              child: Container(
-                padding: EdgeInsets.all(Dimensions.paddingSize * 0.35),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: CustomColors.primary),
-                ),
-                child: SvgPicture.asset(Assets.icons.group),
-              ),
-            ),
+            NotificationIcon(),
           ],
         ),
       ),

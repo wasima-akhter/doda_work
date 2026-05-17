@@ -1,6 +1,7 @@
 import '../../../core/utils/app_storage.dart';
 import '../../../core/utils/basic_import.dart';
 import '../../../routes/routes.dart';
+import '../../../widgets/notification_icon.dart';
 import '../controller/chat_controller.dart';
 
 class ChatScreenMobile extends StatelessWidget {
@@ -31,17 +32,9 @@ class ChatScreenMobile extends StatelessWidget {
                   fontSize: Dimensions.titleMedium * 1.2,
                   fontWeight: FontWeight.w600,
                 ),
-                GestureDetector(
-                  onTap: () => Get.toNamed(Routes.notificationScreen),
-                  child: Container(
-                    padding: EdgeInsets.all(Dimensions.paddingSize * 0.40),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: CustomColors.primary),
-                    ),
-                    child: SvgPicture.asset(Assets.icons.group),
-                  ),
-                ),
+
+                /// NOTIFICATION ICON
+                NotificationIcon(),
               ],
             ),
           ),

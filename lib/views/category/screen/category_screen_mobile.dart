@@ -24,20 +24,9 @@ class CategoryScreenMobile extends GetView<CategoryController> {
                   fontSize: Dimensions.titleMedium * 1.2,
                   fontWeight: FontWeight.w600,
                 ),
-                GestureDetector(
-                  onTap: () => Get.toNamed(Routes.notificationScreen),
-                  child: Container(
-                    margin: EdgeInsets.only(
-                      right: Dimensions.defaultHorizontalSize,
-                    ),
-                    padding: EdgeInsets.all(Dimensions.paddingSize * 0.35),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: CustomColors.primary),
-                    ),
-                    child: SvgPicture.asset(Assets.icons.group),
-                  ),
-                ),
+
+                /// NOTIFICATION ICON
+                NotificationIcon(),
               ],
             ),
           ),

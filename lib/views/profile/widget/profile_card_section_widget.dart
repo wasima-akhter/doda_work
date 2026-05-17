@@ -1,9 +1,9 @@
 part of '../screen/profile_screen.dart';
 
 class ProfileCardSectionWidgetView extends GetView<ProfileController> {
-   ProfileCardSectionWidgetView({super.key});
+  ProfileCardSectionWidgetView({super.key});
 
-   final LoginController logoutController = Get.put(LoginController());
+  final LoginController logoutController = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +16,13 @@ class ProfileCardSectionWidgetView extends GetView<ProfileController> {
           () => Get.toNamed(Routes.settingScreen),
         ),
 
-        if (AppStorage.users == 'PROVIDER')  _buildSectionCard(
-          Icons.reviews_outlined,
-          'Reviews & Ratings',
-          isVisible: AppStorage.isVendor,
-              () => Get.toNamed(Routes.reviewRatingScreen),
-        ),
+        if (AppStorage.users == 'PROVIDER')
+          _buildSectionCard(
+            Icons.reviews_outlined,
+            'Reviews & Ratings',
+            isVisible: AppStorage.isVendor,
+            () => Get.toNamed(Routes.reviewRatingScreen),
+          ),
 
         _buildSectionCard(
           Icons.dataset_outlined,
@@ -95,7 +96,6 @@ class ProfileCardSectionWidgetView extends GetView<ProfileController> {
 
                 ElevatedButton(
                   onPressed: () {
-
                     logoutController.signOutGoogle();
                     logoutController.signOutApple();
                     AppStorage.clear();
@@ -134,7 +134,7 @@ class ProfileCardSectionWidgetView extends GetView<ProfileController> {
         padding: Dimensions.heightSize.edgeBottom,
         child: Obx(
           () => Container(
-            height: Dimensions.heightSize * 4.3,
+            // height: Dimensions.heightSize * 4.3,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),

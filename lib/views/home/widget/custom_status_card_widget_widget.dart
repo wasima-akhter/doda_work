@@ -39,7 +39,6 @@ class CustomStatusCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     String formattedLeadPrice = leadPrice != null
         ? '\$${(leadPrice! / 100).toStringAsFixed(2)}'
         : 'N/A';
@@ -212,7 +211,7 @@ class CustomStatusCardWidget extends StatelessWidget {
                           spacing: 12,
                           children: [
                             GestureDetector(
-                              onTap: () => _showConfirmationDialog(
+                              onTap: () => showConfirmationDialog(
                                 title: "Accept Request",
                                 description:
                                     "Are you sure you want to accept this request?",
@@ -244,7 +243,7 @@ class CustomStatusCardWidget extends StatelessWidget {
                               ),
                             ),
                             GestureDetector(
-                              onTap: () => _showConfirmationDialog(
+                              onTap: () => showConfirmationDialog(
                                 title: "Decline Request",
                                 description:
                                     "Are you sure you want to decline this request?",
@@ -296,7 +295,7 @@ class CustomStatusCardWidget extends StatelessWidget {
                       spacing: 12,
                       children: [
                         GestureDetector(
-                          onTap: () => _showConfirmationDialog(
+                          onTap: () => showConfirmationDialog(
                             title: "Complete Request",
                             description:
                                 "Are you sure you want to complete this request?",
@@ -365,8 +364,10 @@ class CustomStatusCardWidget extends StatelessWidget {
       ),
     );
   }
+}
 
-  void _showConfirmationDialog({
+/*
+  void showConfirmationDialog({
     required String title,
     required String description,
     required String confirmText,
@@ -436,4 +437,112 @@ class CustomStatusCardWidget extends StatelessWidget {
       ),
     );
   }
+
+*/
+void showConfirmationDialog({
+  required String title,
+  required String description,
+  required String confirmText,
+  required VoidCallback onConfirm,
+}) {
+  Get.dialog(
+    Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: Dimensions.defaultHorizontalSize,
+      ),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(Dimensions.paddingSize * 0.8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            /// Title
+            TextWidget(
+              title,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: Dimensions.titleMedium,
+                color: Colors.black,
+              ),
+            ),
+
+            SizedBox(height: 12.h),
+
+            /// Description
+            TextWidget(
+              description,
+              textAlign: TextAlign.center,
+              maxLines: 5,
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: Dimensions.bodyMedium,
+                height: 1.5,
+              ),
+            ),
+
+            SizedBox(height: 24.h),
+
+            /// Buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Get.back(),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 14.h),
+                      side: BorderSide(color: CustomColors.primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(Dimensions.radius),
+                      ),
+                    ),
+                    child: Text(
+                      "Cancel",
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: Dimensions.labelLarge,
+                        color: CustomColors.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(width: 12.w),
+
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: CustomColors.primary,
+                      padding: EdgeInsets.symmetric(vertical: 14.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(Dimensions.radius),
+                      ),
+                    ),
+                    onPressed: onConfirm,
+                    child: Text(
+                      confirmText,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: CustomColors.whiteColor,
+                        fontSize: Dimensions.labelLarge,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

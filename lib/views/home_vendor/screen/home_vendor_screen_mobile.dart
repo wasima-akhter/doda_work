@@ -26,18 +26,8 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
   Widget _buildNotificationIcon() {
     return Row(
       children: [
-        GestureDetector(
-          onTap: _navigateToNotifications,
-          child: Container(
-            margin: Dimensions.defaultHorizontalSize.edgeRight * 0.2,
-            padding: EdgeInsets.all(Dimensions.paddingSize * 0.3),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: CustomColors.primary),
-            ),
-            child: SvgPicture.asset(Assets.icons.group),
-          ),
-        ),
+        /// NOTIFICATION ICON
+        NotificationIcon(),
         Space.width.v10,
       ],
     );
@@ -200,9 +190,7 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CircularProgressIndicator(
-                      color: CustomColors.primary,
-                    ),
+                    CircularProgressIndicator(color: CustomColors.primary),
                     SizedBox(height: 16),
                     Text(
                       'Processing request...',
@@ -230,6 +218,7 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
       await controller.changeStatus(status: newStatus, id: item.id!);
     }
   }
+
   void _navigateToSummary(HomeServiceItem item) {
     Get.toNamed(
       Routes.summaryScreen,
@@ -290,7 +279,9 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
             ),
             Space.height.v10,
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.widthSize * 4),
+              padding: EdgeInsets.symmetric(
+                horizontal: Dimensions.widthSize * 4,
+              ),
               child: TextWidget(
                 "When you have ${status.toLowerCase()} requests, they'll appear here",
                 fontWeight: FontWeight.w400,

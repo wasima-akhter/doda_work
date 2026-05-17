@@ -1,4 +1,5 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
 import '../../../core/utils/basic_import.dart';
 import '../../../routes/routes.dart';
 import '../../summary/model/summary_model.dart';
@@ -13,7 +14,6 @@ class HomeScreenMobile extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-
     final List<String> statusText = ['Pending', 'Ongoing', 'Completed'];
     final List<String> statusApi = ['PENDING', 'IN_PROGRESS', 'COMPLETED'];
 
@@ -48,17 +48,17 @@ class HomeScreenMobile extends GetView<HomeController> {
                         child: CustomScrollView(
                           slivers: [
                             PagedSliverList<int, HomeServiceItem>(
-                              pagingController: controller.pagingControllers[status]!,
-                              builderDelegate:
-                              PagedChildBuilderDelegate<HomeServiceItem>(
+                              pagingController:
+                                  controller.pagingControllers[status]!,
+                              builderDelegate: PagedChildBuilderDelegate<HomeServiceItem>(
                                 itemBuilder: (context, item, itemIndex) {
                                   return CustomStatusCardWidget(
                                     index: itemIndex,
                                     requestId: item.requestId ?? "",
                                     category: item.serviceCategory?.name ?? "",
-                                    subCategory:
-                                    item.subcategory ?? "",
-                                    address: 'Postal Code : ${item.postalCode ?? ""}',
+                                    subCategory: item.subcategory ?? "",
+                                    address:
+                                        'Postal Code : ${item.postalCode ?? ""}',
                                     image: item.attachments.first,
                                     isUser: true,
                                     status: status,
@@ -70,8 +70,10 @@ class HomeScreenMobile extends GetView<HomeController> {
                                         arguments: SummaryModel(
                                           isUser: true,
                                           requestId: item.requestId,
-                                          categoryIcon: item.serviceCategory?.icon,
-                                          categoryName: item.serviceCategory?.name,
+                                          categoryIcon:
+                                              item.serviceCategory?.icon,
+                                          categoryName:
+                                              item.serviceCategory?.name,
                                           customerPhone: item.customerPhone,
                                           customerName: item.customerId?.name,
                                           priority: item.priority,
@@ -83,75 +85,88 @@ class HomeScreenMobile extends GetView<HomeController> {
                                           providerNotes: item.providerNotes,
                                           id: item.id,
                                           status: item.status,
-                                          completedById: item.completedById
+                                          completedById: item.completedById,
                                         ),
                                       );
                                     },
-
                                   );
                                 },
 
-                                noItemsFoundIndicatorBuilder: (_) => SingleChildScrollView(
-                                  physics: const AlwaysScrollableScrollPhysics(),
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height * 0.45,
-                                    alignment: Alignment.center,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(24),
-                                          decoration: BoxDecoration(
-                                            color: CustomColors.primary.withValues(alpha: 0.08),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(
-                                            Icons.assignment_outlined,
-                                            size: 72,
-                                            color: CustomColors.primary,
-                                          ),
-                                        ),
-                                        SizedBox(height: Dimensions.verticalSize * 2.5),
-                                        Text(
-                                          "No ${statusText[index]} Requests",
-                                          style: TextStyle(
-                                            fontSize: Dimensions.titleLarge,
-                                            fontWeight: FontWeight.w700,
-                                            color: CustomColors.blackColor,
-                                          ),
-                                        ),
-                                        SizedBox(height: Dimensions.verticalSize * 0.8),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: Dimensions.widthSize * 4),
-                                          child: Text(
-                                            "You don't have any ${statusText[index].toLowerCase()} requests at the moment. Explore services to book now!",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: Dimensions.bodyMedium,
-                                              fontWeight: FontWeight.w400,
-                                              color: CustomColors.grayShade,
-                                              height: 1.4,
+                                noItemsFoundIndicatorBuilder: (_) =>
+                                    SingleChildScrollView(
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                            0.45,
+                                        alignment: Alignment.center,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.all(24),
+                                              decoration: BoxDecoration(
+                                                color: CustomColors.primary
+                                                    .withValues(alpha: 0.08),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                Icons.assignment_outlined,
+                                                size: 72,
+                                                color: CustomColors.primary,
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                firstPageErrorIndicatorBuilder: (_) =>
-                                    Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(20),
-                                        child: Text(
-                                          "Error loading ${statusText[index]} requests",
-                                          style: TextStyle(
-                                            fontSize: Dimensions.titleSmall,
-                                            color: Colors.red,
-                                          ),
+                                            SizedBox(
+                                              height:
+                                                  Dimensions.verticalSize * 2.5,
+                                            ),
+                                            Text(
+                                              "No ${statusText[index]} Requests",
+                                              style: TextStyle(
+                                                fontSize: Dimensions.titleLarge,
+                                                fontWeight: FontWeight.w700,
+                                                color: CustomColors.blackColor,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height:
+                                                  Dimensions.verticalSize * 0.8,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    Dimensions.widthSize * 4,
+                                              ),
+                                              child: Text(
+                                                "You don't have any ${statusText[index].toLowerCase()} requests at the moment. Explore services to book now!",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      Dimensions.bodyMedium,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: CustomColors.grayShade,
+                                                  height: 1.4,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
+                                firstPageErrorIndicatorBuilder: (_) => Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Text(
+                                      "Error loading ${statusText[index]} requests",
+                                      style: TextStyle(
+                                        fontSize: Dimensions.titleSmall,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 newPageErrorIndicatorBuilder: (_) => Center(
                                   child: Padding(
                                     padding: const EdgeInsets.all(20),

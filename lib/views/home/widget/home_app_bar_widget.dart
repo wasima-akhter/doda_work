@@ -1,4 +1,3 @@
-import '../../../core/utils/app_storage.dart';
 import '../../../core/utils/basic_import.dart';
 import '../../../widgets/notification_icon.dart';
 import '../../profile/controller/profile_controller.dart';
@@ -21,7 +20,7 @@ class HomeAppBarWidgetView extends GetView<ProfileController> {
             AppBarLogoWidget(),
 
             Space.width.v10,
-
+            /*
             /// DIVIDER
             Container(
               height: 36.h,
@@ -32,6 +31,7 @@ class HomeAppBarWidgetView extends GetView<ProfileController> {
             Space.width.v15,
 
             /// USER GREETING
+
             Expanded(
               child: Obx(() {
                 final isVendor = AppStorage.isProvider;
@@ -77,7 +77,7 @@ class HomeAppBarWidgetView extends GetView<ProfileController> {
                 );
               }),
             ),
-
+*/
             /// NOTIFICATION ICON
             NotificationIcon(),
           ],

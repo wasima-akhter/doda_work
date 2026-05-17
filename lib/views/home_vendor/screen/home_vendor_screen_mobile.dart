@@ -12,36 +12,40 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return PreferredSize(
-      preferredSize: Size.fromHeight(Dimensions.appBarHeight * 1.25),
-      child: AppBar(
-        automaticallyImplyLeading: false,
-        scrolledUnderElevation: 0,
-        flexibleSpace: HomeAppBarWidgetView(),
-        actions: [_buildNotificationIcon()],
-      ),
+    return AppBar(
+      toolbarHeight: Dimensions.appBarHeight * 2.25,
+      scrolledUnderElevation: 0,
+      automaticallyImplyLeading: false,
+      flexibleSpace: HomeAppBarWidgetView(),
     );
-  }
-
-  Widget _buildNotificationIcon() {
-    return Row(
-      children: [
-        /// NOTIFICATION ICON
-        NotificationIcon(),
-        Space.width.v10,
-      ],
-    );
-  }
-
-  void _navigateToNotifications() {
-    Get.toNamed(Routes.notificationScreen);
   }
 
   Widget _buildBody() {
     return NestedScrollView(
       headerSliverBuilder: (context, innerBoxIsScrolled) {
-        return [_buildTabBarSection()];
+        return [
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: StickyHeaderDelegate(
+              height: 170.h, // adjust based on your UI
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    WelcomeSection(),
+
+                    Padding(
+                      padding: EdgeInsets.all(12.w),
+                      child: Obx(() => _buildTabBar(controller)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ];
       },
+
       body: _buildTabViews(),
     );
   }
@@ -250,48 +254,52 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
   }
 
   Widget _buildEmptyState(String status) {
-    return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      child: Container(
-        height: Get.height * 0.5,
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: CustomColors.primary.withValues(alpha: 0.08),
-                shape: BoxShape.circle,
-              ),
+    return Container(
+      // padding: EdgeInsets.symmetric(
+      //   horizontal: Dimensions.defaultHorizontalSize,
+      // ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            // height: 110.h,
+            // width: 110.h,
+            padding: EdgeInsets.all(24.r),
+            decoration: BoxDecoration(
+              color: CustomColors.primary.withValues(alpha: 0.08),
+              shape: BoxShape.circle,
+            ),
+            child: FittedBox(
               child: Icon(
                 Icons.assignment_outlined,
-                size: 72,
                 color: CustomColors.primary,
               ),
             ),
-            Space.height.v25,
-            TextWidget(
-              "No ${status.toLowerCase()} requests",
-              fontWeight: FontWeight.w700,
-              fontSize: Dimensions.titleLarge,
-              color: CustomColors.blackColor,
+          ),
+
+          SizedBox(height: 24.h),
+
+          TextWidget(
+            "No ${status.toLowerCase()} requests",
+            textAlign: TextAlign.center,
+            fontWeight: FontWeight.w700,
+            fontSize: Dimensions.titleMedium,
+            color: CustomColors.blackColor,
+          ),
+
+          SizedBox(height: 10.h),
+
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 280.w),
+            child: TextWidget(
+              "When you have ${status.toLowerCase()} requests, they'll appear here",
+              textAlign: TextAlign.center,
+              fontWeight: FontWeight.w400,
+              fontSize: Dimensions.bodyMedium,
+              color: CustomColors.grayShade,
             ),
-            Space.height.v10,
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: Dimensions.widthSize * 4,
-              ),
-              child: TextWidget(
-                "When you have ${status.toLowerCase()} requests, they'll appear here",
-                fontWeight: FontWeight.w400,
-                fontSize: Dimensions.bodyMedium,
-                color: CustomColors.grayShade,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -375,4 +383,32 @@ class _KeepAlivePageState extends State<KeepAlivePage>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+//
+class StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+  final double height;
+
+  StickyHeaderDelegate({required this.child, required this.height});
+
+  @override
+  double get minExtent => height;
+
+  @override
+  double get maxExtent => height;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return child;
+  }
+
+  @override
+  bool shouldRebuild(covariant StickyHeaderDelegate oldDelegate) {
+    return oldDelegate.height != height || oldDelegate.child != child;
+  }
 }

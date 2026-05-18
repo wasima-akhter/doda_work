@@ -9,7 +9,7 @@ class AllCategoryScreenMobile extends GetView<AllCategoryController> {
     final categoryController = Get.find<CategoryController>();
 
     return Scaffold(
-      appBar: CommonAppBar(title: 'All Service Category'),
+      appBar: AuthAppBar(title: 'All Service Category'),
       body: Obx(() {
         if (categoryController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
@@ -30,7 +30,10 @@ class AllCategoryScreenMobile extends GetView<AllCategoryController> {
                   icon: const Icon(Icons.refresh),
                   label: const Text("Fetch Again"),
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -55,8 +58,8 @@ class AllCategoryScreenMobile extends GetView<AllCategoryController> {
             final category = categoryController.allCategory[index];
             return GestureDetector(
               onTap: () => Get.toNamed(
-                  Routes.categoryPreviewScreen,
-                  arguments: category.id
+                Routes.categoryPreviewScreen,
+                arguments: category.id,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,16 +67,20 @@ class AllCategoryScreenMobile extends GetView<AllCategoryController> {
                   ClipOval(
                     child: CachedNetworkImage(
                       imageUrl: category.icon != null
-                          ?  (category.icon ?? "")
+                          ? (category.icon ?? "")
                           : "https://picsum.photos/200/300?random=$index",
                       width: screenWidth * 0.16,
                       height: screenWidth * 0.16,
                       fit: BoxFit.cover,
                       placeholder: (context, url) =>
                           Container(color: Colors.grey.shade300),
-                      errorWidget: (context, url, error) =>
-                          Container(color: Colors.grey.shade300,
-                              child:  Icon(Icons.image_not_supported_rounded, color: Colors.grey)),
+                      errorWidget: (context, url, error) => Container(
+                        color: Colors.grey.shade300,
+                        child: Icon(
+                          Icons.image_not_supported_rounded,
+                          color: Colors.grey,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 5),

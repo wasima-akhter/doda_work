@@ -6,7 +6,7 @@ class ResetScreenMobile extends GetView<ResetController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Reset Password'),
+      appBar: AuthAppBar(title: 'Reset Password'),
 
       body: SafeArea(
         child: ListView(
@@ -31,8 +31,7 @@ class ResetScreenMobile extends GetView<ResetController> {
               controller: controller.passConfirmController,
               focusNode: controller.confirmPasswordFocus,
               nextFocusNode: null,
-              confirmWith:
-                  controller.passwordController,
+              confirmWith: controller.passwordController,
             ),
             Space.height.betweenInputBox,
             Space.height.betweenInputBox,

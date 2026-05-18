@@ -6,7 +6,7 @@ class CertificateScreenMobile extends GetView<CertificateController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Certificate'),
+      appBar: AuthAppBar(title: 'Certificate'),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,

@@ -6,7 +6,7 @@ class DocumentScreenMobile extends GetView<DocumentController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Document'),
+      appBar: AuthAppBar(title: 'Document'),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,

@@ -12,12 +12,14 @@ class AditionalScreenMobile extends GetView<AditionalController> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Obx(() => CommonAppBar(
-          title: controller.currentStep.value == 1
-              ? 'Preview Registration'
-              : 'Service Provider registration',
-          isBack: true,
-        )),
+        child: Obx(
+          () => AuthAppBar(
+            title: controller.currentStep.value == 1
+                ? 'Preview Registration'
+                : 'Service Provider registration',
+            isBack: true,
+          ),
+        ),
       ),
       body: Obx(() {
         if (controller.isLoading.value) return const LoadingWidget();
@@ -57,9 +59,7 @@ class AditionalScreenMobile extends GetView<AditionalController> {
 
         // Service Category
         MultiSelectDropDownWidget(
-          items: controller.serviceCategoryList
-              .map((e) => e.name)
-              .toList(),
+          items: controller.serviceCategoryList.map((e) => e.name).toList(),
           label: "Service Category",
           onChanged: (List<String> selectedNames) {
             controller.selectedServiceList.clear();
@@ -75,22 +75,16 @@ class AditionalScreenMobile extends GetView<AditionalController> {
         ),
 
         Space.height.betweenInputBox,
-        TextWidget(
-          'Select day and set time',
-          fontSize: Dimensions.titleSmall,
-        ),
+        TextWidget('Select day and set time', fontSize: Dimensions.titleSmall),
 
         // DAY BUTTON LIST
         Obx(
           () => Wrap(
             spacing: Dimensions.widthSize,
             runSpacing: Dimensions.heightSize * 0.5,
-            children: List.generate(controller.dayList.length, (
-              index,
-            ) {
+            children: List.generate(controller.dayList.length, (index) {
               final day = controller.dayList[index];
-              final isEditing =
-                  controller.currentEditingDay.value == day;
+              final isEditing = controller.currentEditingDay.value == day;
               final hasTime = controller.isDaySelected(day);
 
               return InkWell(
@@ -123,8 +117,7 @@ class AditionalScreenMobile extends GetView<AditionalController> {
                       if (hasTime && !isEditing) ...[
                         const SizedBox(width: 4),
                         GestureDetector(
-                          onTap: () =>
-                              controller.removeDayAvailability(day),
+                          onTap: () => controller.removeDayAvailability(day),
                           child: const Icon(
                             Icons.close,
                             size: 16,
@@ -205,9 +198,7 @@ class AditionalScreenMobile extends GetView<AditionalController> {
                         '${item['day']}: ',
                         fontWeight: FontWeight.w500,
                       ),
-                      TextWidget(
-                        '${item['startTime']} - ${item['endTime']}',
-                      ),
+                      TextWidget('${item['startTime']} - ${item['endTime']}'),
                       const Spacer(),
                       IconButton(
                         icon: const Icon(
@@ -215,8 +206,8 @@ class AditionalScreenMobile extends GetView<AditionalController> {
                           size: 20,
                           color: Colors.red,
                         ),
-                        onPressed: () => controller
-                            .removeDayAvailability(item['day']),
+                        onPressed: () =>
+                            controller.removeDayAvailability(item['day']),
                       ),
                     ],
                   ),
@@ -245,11 +236,13 @@ class AditionalScreenMobile extends GetView<AditionalController> {
           final isPick = controller.selectedAddress.isNotEmpty;
           return GestureDetector(
             onTap: () {
-              Get.to(() => LocationPickerWidget(
-                selectedAddress: controller.selectedAddress,
-                selectedLatLng: controller.selectedLatLng,
-                googleApiKey: apiKeyMap,
-              ));
+              Get.to(
+                () => LocationPickerWidget(
+                  selectedAddress: controller.selectedAddress,
+                  selectedLatLng: controller.selectedLatLng,
+                  googleApiKey: apiKeyMap,
+                ),
+              );
             },
             child: Container(
               width: MediaQuery.of(context).size.width,
@@ -258,16 +251,22 @@ class AditionalScreenMobile extends GetView<AditionalController> {
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isPick ? CustomColors.primary : CustomColors.disableColor,
+                  color: isPick
+                      ? CustomColors.primary
+                      : CustomColors.disableColor,
                   width: 1.4,
                 ),
               ),
               child: Text(
-                isPick ? controller.selectedAddress.value : "Pick Service Address",
+                isPick
+                    ? controller.selectedAddress.value
+                    : "Pick Service Address",
                 style: TextStyle(
                   fontSize: Dimensions.titleSmall,
                   fontWeight: FontWeight.w500,
-                  color: isPick ? CustomColors.blackColor : CustomColors.blackColor.withAlpha(888),
+                  color: isPick
+                      ? CustomColors.blackColor
+                      : CustomColors.blackColor.withAlpha(888),
                 ),
               ),
             ),
@@ -365,11 +364,13 @@ class AditionalScreenMobile extends GetView<AditionalController> {
       children: [
         ProviderPreviewWidget(controller: controller),
         Space.height.v30,
-        Obx(() => PrimaryButtonWidget(
-          title: 'Submit Application',
-          isLoading: controller.providerRegIsLoading.value,
-          onPressed: controller.providerRegisterProcess,
-        )),
+        Obx(
+          () => PrimaryButtonWidget(
+            title: 'Submit Application',
+            isLoading: controller.providerRegIsLoading.value,
+            onPressed: controller.providerRegisterProcess,
+          ),
+        ),
         Space.height.v10,
         TextButton(
           onPressed: () => controller.currentStep.value = 0,
@@ -392,7 +393,9 @@ class AditionalScreenMobile extends GetView<AditionalController> {
             height: 6,
             margin: const EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
-              color: index <= step ? CustomColors.primary : CustomColors.disableColor,
+              color: index <= step
+                  ? CustomColors.primary
+                  : CustomColors.disableColor,
               borderRadius: BorderRadius.circular(10),
             ),
           ),

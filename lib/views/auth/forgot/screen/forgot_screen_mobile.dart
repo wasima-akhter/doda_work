@@ -6,7 +6,7 @@ class ForgotScreenMobile extends GetView<ForgotController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Forgot Password'),
+      appBar: AuthAppBar(title: 'Forgot Password'),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,

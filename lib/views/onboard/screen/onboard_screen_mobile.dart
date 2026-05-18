@@ -71,7 +71,7 @@ class OnboardScreenMobile extends GetView<OnboardController> {
           ),
         ),
       ),
-      appBar: CommonAppBar(title: '', isSkip: true, isBack: false),
+      appBar: AuthAppBar(title: '', isSkip: true, isBack: false),
       body: SafeArea(
         child: Padding(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,

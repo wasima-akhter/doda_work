@@ -6,7 +6,7 @@ class FavoriteScreenMobile extends GetView<FavoriteController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Favorite'),
+      appBar: AuthAppBar(title: 'Favorite'),
       body: SafeArea(
         child: Obx(() {
           // Loading
@@ -48,7 +48,7 @@ class FavoriteScreenMobile extends GetView<FavoriteController> {
                     color: CustomColors.primary,
                   ),
                   subtitle: TextWidget(
-                    item.icon,  // you can show another field here
+                    item.icon, // you can show another field here
                     fontSize: Dimensions.titleSmall,
                   ),
                 );

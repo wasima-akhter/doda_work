@@ -1,5 +1,6 @@
 import 'package:doda_work/widgets/auth_app_bar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 import '../core/utils/basic_import.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -42,7 +43,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: widget.title),
+      appBar: AuthAppBar(title: widget.title),
       body: Obx(
         () => Stack(
           children: [

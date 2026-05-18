@@ -1,7 +1,7 @@
 import '../../../core/utils/app_storage.dart';
 import '../../../core/utils/basic_import.dart';
 import '../../../routes/routes.dart';
-import '../../../widgets/notification_icon.dart';
+import '../../../widgets/common_appbar.dart';
 import '../controller/chat_controller.dart';
 
 class ChatScreenMobile extends StatelessWidget {
@@ -14,32 +14,7 @@ class ChatScreenMobile extends StatelessWidget {
     final myId = AppStorage.userId;
 
     return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        toolbarHeight: Dimensions.appBarHeight * 2.25,
-        flexibleSpace: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: Dimensions.defaultHorizontalSize,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AppBarLogoWidget(),
-                TextWidget(
-                  'Chat',
-                  color: CustomColors.blackColor,
-                  fontSize: Dimensions.titleMedium * 1.2,
-                  fontWeight: FontWeight.w600,
-                ),
-
-                /// NOTIFICATION ICON
-                NotificationIcon(),
-              ],
-            ),
-          ),
-        ),
-      ),
+      appBar: CommonAppbar(title: "Chat"),
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading.value) {

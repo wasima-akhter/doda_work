@@ -6,7 +6,7 @@ class OtpScreenMobile extends GetView<OtpController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Verification'),
+      appBar: AuthAppBar(title: 'Verification'),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
@@ -67,7 +67,13 @@ class OtpScreenMobile extends GetView<OtpController> {
 
             Row(
               mainAxisAlignment: mainCenter,
-              children: [TimerWidget(onResendCode: () {controller.resendOtpProcess();})],
+              children: [
+                TimerWidget(
+                  onResendCode: () {
+                    controller.resendOtpProcess();
+                  },
+                ),
+              ],
             ),
 
             Space.height.betweenInputBox,

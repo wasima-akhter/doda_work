@@ -6,7 +6,7 @@ class NotificationScreenMobile extends GetView<NotificationController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Notification'),
+      appBar: AuthAppBar(title: 'Notification'),
       body: RefreshIndicator(
         onRefresh: () async {
           controller.pagingController.refresh();
@@ -15,7 +15,7 @@ class NotificationScreenMobile extends GetView<NotificationController> {
           padding: EdgeInsets.symmetric(horizontal: 12),
           pagingController: controller.pagingController,
           builderDelegate: PagedChildBuilderDelegate<NotificationItem>(
-            itemBuilder: (context, notification, index){
+            itemBuilder: (context, notification, index) {
               return Container(
                 margin: EdgeInsets.only(top: 8),
                 padding: EdgeInsets.all(8),
@@ -50,11 +50,12 @@ class NotificationScreenMobile extends GetView<NotificationController> {
                         ),
                         TextWidget(
                           DateFormat('hh:mm a').format(
-                              (notification.createdAt ?? DateTime.now()).toLocal()
+                            (notification.createdAt ?? DateTime.now())
+                                .toLocal(),
                           ),
                           fontSize: Dimensions.titleSmall * 0.8,
                           fontWeight: FontWeight.w600,
-                        )
+                        ),
                       ],
                     ),
                     TextWidget(
@@ -63,11 +64,11 @@ class NotificationScreenMobile extends GetView<NotificationController> {
                       maxLines: 3,
                       fontWeight: FontWeight.w400,
                       color: CustomColors.grayShade,
-                    )
+                    ),
                   ],
                 ),
               );
-            }
+            },
           ),
         ),
       ),

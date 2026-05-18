@@ -7,17 +7,22 @@ class CategoryPreviewScreenMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoryController = Get.find<CategoryController>();
     final categoryId = Get.arguments as String;
-    final category = categoryController.allCategory.firstWhereOrNull((c) => c.id == categoryId);
+    final category = categoryController.allCategory.firstWhereOrNull(
+      (c) => c.id == categoryId,
+    );
 
     final subcategories = category?.subcategories ?? [];
 
     return Scaffold(
-      appBar: CommonAppBar(title: category?.name ?? 'Category'),
+      appBar: AuthAppBar(title: category?.name ?? 'Category'),
       body: subcategories.isEmpty
           ? Center(
               child: Text(
                 "No subcategories available",
-                style: TextStyle(fontSize: Dimensions.titleSmall, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  fontSize: Dimensions.titleSmall,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             )
           : ListView.separated(

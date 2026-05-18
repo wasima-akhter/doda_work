@@ -7,7 +7,7 @@ class SummaryScreenMobile extends GetView<SummaryController> {
   Widget build(BuildContext context) {
     final SummaryModel model = Get.arguments;
     return Scaffold(
-      appBar: CommonAppBar(title: 'Service Summary'),
+      appBar: AuthAppBar(title: 'Service Summary'),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
@@ -72,7 +72,7 @@ class SummaryScreenMobile extends GetView<SummaryController> {
               Space.height.v10,
               if (AppStorage.isUser)
                 Obx(
-                      () => CompletionProofGrid(
+                  () => CompletionProofGrid(
                     proofs: model.completionProof!,
                     providerNotes: model.providerNotes,
                     onAccept: () => controller.showReviewBottomSheet(

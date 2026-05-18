@@ -52,6 +52,7 @@ class CustomStatusCardWidget extends StatelessWidget {
           border: Border.all(color: Colors.grey.withAlpha(555)),
           borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),
         ),
+        constraints: BoxConstraints(minHeight: 130.h),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -62,8 +63,8 @@ class CustomStatusCardWidget extends StatelessWidget {
               ),
               child: CachedNetworkImage(
                 imageUrl: image ?? '',
-                width: 100,
-                height: 120,
+                width: 100.w,
+                height: 130.h,
                 placeholder: (context, url) =>
                     Container(color: Colors.grey.shade300),
                 errorWidget: (context, url, error) => Container(
@@ -78,286 +79,620 @@ class CustomStatusCardWidget extends StatelessWidget {
               ),
             ),
             Space.width.v5,
+            /*
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          TextWidget(
-                            'Request ID: ',
-                            color: CustomColors.primary,
-                            fontSize: Dimensions.titleSmall * 0.85,
+              child: SizedBox(
+                // height: 130.h,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            TextWidget(
+                              'Request ID: ',
+                              color: CustomColors.primary,
+                              fontSize: Dimensions.titleSmall * 0.85,
+                            ),
+                            TextWidget(
+                              requestId,
+                              maxLines: 1,
+                              fontSize: Dimensions.titleSmall * 0.9,
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
                           ),
-                          TextWidget(
-                            requestId,
+                          decoration: BoxDecoration(
+                            color: CustomColors.primary,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(
+                                Dimensions.radius * 0.4,
+                              ),
+                              bottomRight: Radius.circular(
+                                Dimensions.radius * 0.4,
+                              ),
+                              bottomLeft: Radius.circular(
+                                Dimensions.radius * 0.4,
+                              ),
+                            ),
+                          ),
+                          child: TextWidget(
+                            status,
+                            fontSize: 12,
+                            color: CustomColors.whiteColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    TextWidget(
+                      'Category: $category',
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      fontSize: Dimensions.titleSmall * 0.9,
+                    ),
+                    TextWidget(
+                      'Sub Category: $subCategory',
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      fontSize: Dimensions.titleSmall * 0.9,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_pin,
+                          color: CustomColors.primary,
+                          size: Dimensions.iconSizeSmall * 1.6,
+                        ),
+                        Flexible(
+                          child: TextWidget(
+                            address,
+                            color: CustomColors.primary,
                             maxLines: 1,
+                            textOverflow: TextOverflow.ellipsis,
                             fontSize: Dimensions.titleSmall * 0.9,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    if (!isUser && status == "ACCEPTED")
+                      InkWell(
+                        onTap: () {
+                          Get.toNamed(
+                            Routes.inboxScreen,
+                            parameters: {
+                              'name': customerId?.name ?? '',
+                              'receiverId': customerId?.id ?? '',
+                              'avatar': customerId?.avatar ?? '',
+                            },
+                          );
+
+                          debugPrint(
+                            '==================================================================',
+                          );
+                          debugPrint(
+                            '============ FROM PROVIDER ======================================================',
+                          );
+                        },
+                        child: Container(
+                          width: 60.w,
+                          padding: EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: CustomColors.primary),
+                            borderRadius: BorderRadius.circular(
+                              Dimensions.radius * 0.4,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.chat,
+                                color: CustomColors.primary,
+                                size: Dimensions.iconSizeDefault,
+                              ),
+                              SizedBox(width: 4),
+                              TextWidget(
+                                'Chat',
+                                fontSize: Dimensions.titleSmall * 0.9,
+                                color: CustomColors.primary,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                    if (!isUser && status == "PENDING")
+                      Row(
+                        mainAxisAlignment: mainSpaceBet,
+                        children: [
+                          Wrap(
+                            spacing: 12,
+                            children: [
+                              GestureDetector(
+                                onTap: () => showConfirmationDialog(
+                                  title: "Accept Request",
+                                  description:
+                                      "Are you sure you want to accept this request?",
+                                  confirmText: "Yes, Accept",
+                                  onConfirm: () {
+                                    Get.back();
+                                    debugPrint("object");
+                                    onTapAccept?.call();
+                                  },
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: CustomColors.primary,
+                                    ),
+                                    color: CustomColors.primary,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    "Accept",
+                                    style: TextStyle(
+                                      color: CustomColors.whiteColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () => showConfirmationDialog(
+                                  title: "Decline Request",
+                                  description:
+                                      "Are you sure you want to decline this request?",
+                                  confirmText: "Yes, Decline",
+                                  onConfirm: () {
+                                    Get.back();
+                                    onTapDecline?.call();
+                                  },
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: CustomColors.primary,
+                                    ),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text("Decline"),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: mainEnd,
+                            mainAxisSize: mainMin,
+                            crossAxisAlignment: crossEnd,
+                            children: [
+                              TextWidget(
+                                'Lead price',
+                                fontSize: Dimensions.titleSmall * 0.75,
+                                fontWeight: FontWeight.w500,
+                                color: CustomColors.grayShade,
+                              ),
+                              TextWidget(
+                                formattedLeadPrice, // ✅ formatted value
+                                fontSize: Dimensions.titleSmall * 0.9,
+                                fontWeight: FontWeight.bold,
+                                color: CustomColors.primary,
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: CustomColors.primary,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(Dimensions.radius * 0.4),
-                            bottomRight: Radius.circular(
-                              Dimensions.radius * 0.4,
+                    if (!isUser && status == "ONGOING")
+                      Row(
+                        spacing: 12,
+                        children: [
+                          GestureDetector(
+                            onTap: () => showConfirmationDialog(
+                              title: "Complete Request",
+                              description:
+                                  "Are you sure you want to complete this request?",
+                              confirmText: "Yes, Complete",
+                              onConfirm: () {
+                                Get.back();
+                                debugPrint("object");
+                                onTapComplete?.call();
+                              },
                             ),
-                            bottomLeft: Radius.circular(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: CustomColors.primary),
+                                color: CustomColors.primary,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                "Complete",
+                                style: TextStyle(
+                                  color: CustomColors.whiteColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    if (isUser && status == "ONGOING")
+                      InkWell(
+                        onTap: () {
+                          Get.toNamed(Routes.inboxScreen, arguments: {});
+                        },
+                        child: Container(
+                          width: 60.w,
+                          padding: EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: CustomColors.primary),
+                            borderRadius: BorderRadius.circular(
                               Dimensions.radius * 0.4,
                             ),
                           ),
-                        ),
-                        child: TextWidget(
-                          status,
-                          fontSize: 12,
-                          color: CustomColors.whiteColor,
-                          fontWeight: FontWeight.w500,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.chat,
+                                color: CustomColors.primary,
+                                size: Dimensions.iconSizeDefault,
+                              ),
+                              SizedBox(width: 4),
+                              TextWidget(
+                                'Chat',
+                                fontSize: Dimensions.titleSmall * 0.9,
+                                color: CustomColors.primary,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                  TextWidget(
-                    'Category: $category',
-                    maxLines: 1,
-                    textOverflow: TextOverflow.ellipsis,
-                    fontSize: Dimensions.titleSmall * 0.9,
-                  ),
-                  TextWidget(
-                    'Sub Category: $subCategory',
-                    maxLines: 1,
-                    textOverflow: TextOverflow.ellipsis,
-                    fontSize: Dimensions.titleSmall * 0.9,
-                  ),
-                  Row(
+                  ],
+                ),
+              ),
+            ),
+*/
+            Expanded(
+              child: Container(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: 130.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.location_pin,
-                        color: CustomColors.primary,
-                        size: Dimensions.iconSizeSmall * 1.6,
-                      ),
-                      Flexible(
-                        child: TextWidget(
-                          address,
-                          color: CustomColors.primary,
-                          maxLines: 1,
-                          textOverflow: TextOverflow.ellipsis,
-                          fontSize: Dimensions.titleSmall * 0.9,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  if (!isUser && status == "ACCEPTED")
-                    InkWell(
-                      onTap: () {
-                        Get.toNamed(
-                          Routes.inboxScreen,
-                          parameters: {
-                            'name': customerId?.name ?? '',
-                            'receiverId': customerId?.id ?? '',
-                            'avatar': customerId?.avatar ?? '',
-                          },
-                        );
-
-                        debugPrint(
-                          '==================================================================',
-                        );
-                        debugPrint(
-                          '============ FROM PROVIDER ======================================================',
-                        );
-                      },
-                      child: Container(
-                        width: 60.w,
-                        padding: EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: CustomColors.primary),
-                          borderRadius: BorderRadius.circular(
-                            Dimensions.radius * 0.4,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.chat,
-                              color: CustomColors.primary,
-                              size: Dimensions.iconSizeDefault,
-                            ),
-                            SizedBox(width: 4),
-                            TextWidget(
-                              'Chat',
-                              fontSize: Dimensions.titleSmall * 0.9,
-                              color: CustomColors.primary,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                  SizedBox(height: 5),
-                  if (!isUser && status == "PENDING")
-                    Row(
-                      mainAxisAlignment: mainSpaceBet,
-                      children: [
-                        Wrap(
-                          spacing: 12,
-                          children: [
-                            GestureDetector(
-                              onTap: () => showConfirmationDialog(
-                                title: "Accept Request",
-                                description:
-                                    "Are you sure you want to accept this request?",
-                                confirmText: "Yes, Accept",
-                                onConfirm: () {
-                                  Get.back();
-                                  debugPrint("object");
-                                  onTapAccept?.call();
-                                },
-                              ),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: CustomColors.primary,
-                                  ),
+                      /// TOP CONTENT
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                TextWidget(
+                                  'Request ID: ',
                                   color: CustomColors.primary,
-                                  borderRadius: BorderRadius.circular(4),
+                                  fontSize: Dimensions.titleSmall * 0.85,
                                 ),
-                                child: Text(
-                                  "Accept",
-                                  style: TextStyle(
-                                    color: CustomColors.whiteColor,
+                                Expanded(
+                                  child: TextWidget(
+                                    requestId,
+                                    maxLines: 1,
+                                    textOverflow: TextOverflow.ellipsis,
+                                    fontSize: Dimensions.titleSmall * 0.9,
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                            GestureDetector(
-                              onTap: () => showConfirmationDialog(
-                                title: "Decline Request",
-                                description:
-                                    "Are you sure you want to decline this request?",
-                                confirmText: "Yes, Decline",
-                                onConfirm: () {
-                                  Get.back();
-                                  onTapDecline?.call();
-                                },
-                              ),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: CustomColors.primary,
-                                  ),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text("Decline"),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          mainAxisAlignment: mainEnd,
-                          mainAxisSize: mainMin,
-                          crossAxisAlignment: crossEnd,
-                          children: [
-                            TextWidget(
-                              'Lead price',
-                              fontSize: Dimensions.titleSmall * 0.75,
-                              fontWeight: FontWeight.w500,
-                              color: CustomColors.grayShade,
-                            ),
-                            TextWidget(
-                              formattedLeadPrice, // ✅ formatted value
-                              fontSize: Dimensions.titleSmall * 0.9,
-                              fontWeight: FontWeight.bold,
-                              color: CustomColors.primary,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  if (!isUser && status == "ONGOING")
-                    Row(
-                      spacing: 12,
-                      children: [
-                        GestureDetector(
-                          onTap: () => showConfirmationDialog(
-                            title: "Complete Request",
-                            description:
-                                "Are you sure you want to complete this request?",
-                            confirmText: "Yes, Complete",
-                            onConfirm: () {
-                              Get.back();
-                              debugPrint("object");
-                              onTapComplete?.call();
-                            },
                           ),
-                          child: Container(
+
+                          SizedBox(width: 6.w),
+
+                          Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 2,
+                              horizontal: 8.w,
+                              vertical: 3.h,
                             ),
                             decoration: BoxDecoration(
-                              border: Border.all(color: CustomColors.primary),
                               color: CustomColors.primary,
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(
+                                  Dimensions.radius * 0.4,
+                                ),
+                                bottomRight: Radius.circular(
+                                  Dimensions.radius * 0.4,
+                                ),
+                                bottomLeft: Radius.circular(
+                                  Dimensions.radius * 0.4,
+                                ),
+                              ),
                             ),
-                            child: Text(
-                              "Complete",
-                              style: TextStyle(color: CustomColors.whiteColor),
+                            child: TextWidget(
+                              status,
+                              fontSize: 12.sp,
+                              color: CustomColors.whiteColor,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
 
-                  if (isUser && status == "ONGOING")
-                    InkWell(
-                      onTap: () {
-                        Get.toNamed(Routes.inboxScreen, arguments: {});
-                      },
-                      child: Container(
-                        width: 60.w,
-                        padding: EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: CustomColors.primary),
-                          borderRadius: BorderRadius.circular(
-                            Dimensions.radius * 0.4,
+                      // SizedBox(height: 4.h),
+                      TextWidget(
+                        'Category: $category',
+                        maxLines: 1,
+                        textOverflow: TextOverflow.ellipsis,
+                        fontSize: Dimensions.titleSmall * 0.9,
+                      ),
+
+                      //   SizedBox(height: 2.h),
+                      TextWidget(
+                        'Sub Category: $subCategory',
+                        maxLines: 1,
+                        textOverflow: TextOverflow.ellipsis,
+                        fontSize: Dimensions.titleSmall * 0.9,
+                      ),
+
+                      //   SizedBox(height: 2.h),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_pin,
+                            color: CustomColors.primary,
+                            size: Dimensions.iconSizeSmall * 1.6,
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.chat,
+
+                          SizedBox(width: 2.w),
+
+                          Expanded(
+                            child: TextWidget(
+                              address,
                               color: CustomColors.primary,
-                              size: Dimensions.iconSizeDefault,
-                            ),
-                            SizedBox(width: 4),
-                            TextWidget(
-                              'Chat',
+                              maxLines: 1,
+                              textOverflow: TextOverflow.ellipsis,
                               fontSize: Dimensions.titleSmall * 0.9,
-                              color: CustomColors.primary,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
+
+                      /// ACTION AREA
+                      if ((!isUser && status == "PENDING") ||
+                          (!isUser && status == "ONGOING") ||
+                          (!isUser && status == "ACCEPTED") ||
+                          (isUser && status == "ONGOING"))
+                        // SizedBox(height: 10.h),
+                        const SizedBox.shrink(),
+
+                      if (!isUser && status == "ACCEPTED") _buildChatButton(),
+
+                      if (!isUser && status == "PENDING")
+                        _buildPendingActions(formattedLeadPrice),
+
+                      if (!isUser && status == "ONGOING")
+                        _buildCompleteButton(),
+
+                      if (isUser && status == "ONGOING") _buildUserChatButton(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChatButton() {
+    return InkWell(
+      onTap: () {
+        Get.toNamed(
+          Routes.inboxScreen,
+          parameters: {
+            'name': customerId?.name ?? '',
+            'receiverId': customerId?.id ?? '',
+            'avatar': customerId?.avatar ?? '',
+          },
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+        decoration: BoxDecoration(
+          border: Border.all(color: CustomColors.primary),
+          borderRadius: BorderRadius.circular(Dimensions.radius * 0.4),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.chat,
+              color: CustomColors.primary,
+              size: Dimensions.iconSizeDefault,
+            ),
+
+            SizedBox(width: 4.w),
+
+            TextWidget(
+              'Chat',
+              fontSize: Dimensions.titleSmall * 0.9,
+              color: CustomColors.primary,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPendingActions(String formattedLeadPrice) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 4.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Expanded(
+            child: Wrap(
+              spacing: 8.w,
+              runSpacing: 6.h,
+              children: [
+                GestureDetector(
+                  onTap: () => showConfirmationDialog(
+                    title: "Accept Request",
+                    description:
+                        "Are you sure you want to accept this request?",
+                    confirmText: "Yes, Accept",
+                    onConfirm: () {
+                      Get.back();
+                      onTapAccept?.call();
+                    },
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 5.h,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: CustomColors.primary),
+                      color: CustomColors.primary,
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Text(
+                      "Accept",
+                      style: TextStyle(
+                        color: CustomColors.whiteColor,
+                        fontSize: Dimensions.bodySmall,
                       ),
                     ),
-                ],
+                  ),
+                ),
+
+                GestureDetector(
+                  onTap: () => showConfirmationDialog(
+                    title: "Decline Request",
+                    description:
+                        "Are you sure you want to decline this request?",
+                    confirmText: "Yes, Decline",
+                    onConfirm: () {
+                      Get.back();
+                      onTapDecline?.call();
+                    },
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 5.h,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: CustomColors.primary),
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Text(
+                      "Decline",
+                      style: TextStyle(fontSize: Dimensions.bodySmall),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          SizedBox(width: 8.w),
+
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextWidget(
+                'Lead price',
+                fontSize: Dimensions.titleSmall * 0.75,
+                fontWeight: FontWeight.w500,
+                color: CustomColors.grayShade,
               ),
+
+              TextWidget(
+                formattedLeadPrice,
+                fontSize: Dimensions.titleSmall * 0.9,
+                fontWeight: FontWeight.bold,
+                color: CustomColors.primary,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCompleteButton() {
+    return GestureDetector(
+      onTap: () => showConfirmationDialog(
+        title: "Complete Request",
+        description: "Are you sure you want to complete this request?",
+        confirmText: "Yes, Complete",
+        onConfirm: () {
+          Get.back();
+          onTapComplete?.call();
+        },
+      ),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+        decoration: BoxDecoration(
+          border: Border.all(color: CustomColors.primary),
+          color: CustomColors.primary,
+          borderRadius: BorderRadius.circular(4.r),
+        ),
+        child: Text(
+          "Complete",
+          style: TextStyle(
+            color: CustomColors.whiteColor,
+            fontSize: Dimensions.bodySmall,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserChatButton() {
+    return InkWell(
+      onTap: () {
+        Get.toNamed(Routes.inboxScreen, arguments: {});
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+        decoration: BoxDecoration(
+          border: Border.all(color: CustomColors.primary),
+          borderRadius: BorderRadius.circular(Dimensions.radius * 0.4),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.chat,
+              color: CustomColors.primary,
+              size: Dimensions.iconSizeDefault,
+            ),
+
+            SizedBox(width: 4.w),
+
+            TextWidget(
+              'Chat',
+              fontSize: Dimensions.titleSmall * 0.9,
+              color: CustomColors.primary,
             ),
           ],
         ),

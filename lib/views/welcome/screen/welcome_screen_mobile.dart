@@ -162,7 +162,10 @@ class WelcomeScreenMobile extends GetView<WelcomeController> {
                     children: [
                       SvgPicture.asset(
                         Assets.icons.request1,
-                        colorFilter: ColorFilter.mode(CustomColors.whiteColor, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                          CustomColors.whiteColor,
+                          BlendMode.srcIn,
+                        ),
                       ),
                       TextWidget(
                         padding: EdgeInsetsGeometry.symmetric(
@@ -185,7 +188,7 @@ class WelcomeScreenMobile extends GetView<WelcomeController> {
           ),
         ),
       ),
-      appBar: CommonAppBar(title: '', isBack: false),
+      appBar: AuthAppBar(title: '', isBack: false),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,

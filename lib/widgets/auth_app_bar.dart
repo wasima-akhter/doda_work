@@ -1,7 +1,8 @@
 import 'package:doda_work/routes/routes.dart';
+
 import '../core/utils/basic_import.dart';
 
-class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
+class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool isBack;
 
@@ -11,9 +12,10 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color? iconColor;
   final Color? borderColor;
   final bool isSkip;
+  final void Function()? onTap;
   final bool isPrimary;
 
-  const CommonAppBar({
+  const AuthAppBar({
     super.key,
     required this.title,
     this.isBack = true,
@@ -23,6 +25,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.titleColor,
     this.iconColor,
     this.borderColor,
+    this.onTap,
   });
 
   @override
@@ -37,7 +40,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       leading: isBack
           ? InkWell(
-              onTap: () => Get.close(1),
+              onTap: onTap ?? () => Get.close(1),
               child: Icon(
                 Icons.arrow_back_ios,
                 color: isPrimary

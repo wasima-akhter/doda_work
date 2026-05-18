@@ -7,7 +7,7 @@ class VerificationScreenMobile extends GetView<VerificationController> {
   Widget build(BuildContext context) {
     Get.put(RegisterController());
     return Scaffold(
-      appBar: CommonAppBar(title: 'Verification'),
+      appBar: AuthAppBar(title: 'Verification'),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,

@@ -1,10 +1,10 @@
+import 'package:doda_work/core/utils/dimensions.dart'; // Ensure this import is correct
 import 'package:doda_work/core/utils/extensions.dart';
+import 'package:doda_work/views/terms/controller/terms_controller.dart'; // Ensure the correct path is used
 import 'package:doda_work/widgets/auth_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
-import 'package:doda_work/core/utils/dimensions.dart'; // Ensure this import is correct
-import 'package:doda_work/views/terms/controller/terms_controller.dart'; // Ensure the correct path is used
 
 class TermsScreenMobile extends GetView<TermsController> {
   const TermsScreenMobile({super.key});
@@ -13,7 +13,7 @@ class TermsScreenMobile extends GetView<TermsController> {
   Widget build(BuildContext context) {
     controller.getTermsCondition();
     return Scaffold(
-      appBar: CommonAppBar(title: 'Terms & Conditions'),
+      appBar: AuthAppBar(title: 'Terms & Conditions'),
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading.value) {

@@ -6,7 +6,7 @@ class VerifyScreenMobile extends GetView<VerifyController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Verification'),
+      appBar: AuthAppBar(title: 'Verification'),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
@@ -71,7 +71,9 @@ class VerifyScreenMobile extends GetView<VerifyController> {
 
             Row(
               mainAxisAlignment: mainCenter,
-              children: [TimerWidget(onResendCode: () => controller.resendOtpProcess())],
+              children: [
+                TimerWidget(onResendCode: () => controller.resendOtpProcess()),
+              ],
             ),
 
             Space.height.betweenInputBox,

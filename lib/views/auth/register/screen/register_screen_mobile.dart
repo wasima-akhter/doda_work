@@ -6,9 +6,7 @@ class RegisterScreenMobile extends GetView<RegisterController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(
-        isBack: false,
-          title: ''),
+      appBar: AuthAppBar(isBack: false, title: ''),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
@@ -42,7 +40,6 @@ class RegisterScreenMobile extends GetView<RegisterController> {
                   padding: Dimensions.widthSize.edgeLeft * 0.24,
                   'Sign In',
                   onTap: () {
-
                     Get.offAllNamed(Routes.loginScreen);
                   },
                   color: CustomColors.primary,
@@ -58,5 +55,3 @@ class RegisterScreenMobile extends GetView<RegisterController> {
     );
   }
 }
-
-

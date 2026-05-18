@@ -6,7 +6,7 @@ class LicenceScreenMobile extends GetView<LicenceController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Licence'),
+      appBar: AuthAppBar(title: 'Licence'),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
@@ -20,14 +20,16 @@ class LicenceScreenMobile extends GetView<LicenceController> {
                 children: [
                   if (oldItems.isNotEmpty) ...[
                     ...oldItems.map(
-                          (imgUrl) => Stack(
+                      (imgUrl) => Stack(
                         children: [
                           Container(
                             width: 100.w,
                             height: 90.h,
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.orange),
-                              borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),
+                              borderRadius: BorderRadius.circular(
+                                Dimensions.radius * 0.8,
+                              ),
                               image: DecorationImage(
                                 image: NetworkImage(imgUrl),
                                 fit: BoxFit.cover,
@@ -44,7 +46,11 @@ class LicenceScreenMobile extends GetView<LicenceController> {
                               child: const CircleAvatar(
                                 radius: 13,
                                 backgroundColor: Colors.black54,
-                                child: Icon(Icons.close, size: 16, color: Colors.white),
+                                child: Icon(
+                                  Icons.close,
+                                  size: 16,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
@@ -53,14 +59,16 @@ class LicenceScreenMobile extends GetView<LicenceController> {
                     ),
                   ],
                   ...newItems.map(
-                        (photo) => Stack(
+                    (photo) => Stack(
                       children: [
                         Container(
                           width: 100.w,
                           height: 90.h,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.orange),
-                            borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),
+                            borderRadius: BorderRadius.circular(
+                              Dimensions.radius * 0.8,
+                            ),
                             image: DecorationImage(
                               image: FileImage(photo),
                               fit: BoxFit.cover,
@@ -77,7 +85,11 @@ class LicenceScreenMobile extends GetView<LicenceController> {
                             child: const CircleAvatar(
                               radius: 13,
                               backgroundColor: Colors.black54,
-                              child: Icon(Icons.close, size: 16, color: Colors.white),
+                              child: Icon(
+                                Icons.close,
+                                size: 16,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -85,7 +97,6 @@ class LicenceScreenMobile extends GetView<LicenceController> {
                     ),
                   ),
 
-                  
                   GestureDetector(
                     onTap: controller.pickImage,
                     child: Container(
@@ -93,7 +104,9 @@ class LicenceScreenMobile extends GetView<LicenceController> {
                       height: 90.h,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.orange),
-                        borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),
+                        borderRadius: BorderRadius.circular(
+                          Dimensions.radius * 0.8,
+                        ),
                         color: Colors.grey.shade200,
                       ),
                       child: Center(
@@ -119,14 +132,13 @@ class LicenceScreenMobile extends GetView<LicenceController> {
                       title: isLoading ? 'Updating...' : 'Update',
                       onPressed: () {
                         if (!isLoading) {
-                          controller.updateProfile(
-                              body: {}
-                          );
+                          controller.updateProfile(body: {});
                         }
                       },
                     ),
                   ),
                   Space.width.v10,
+
                   /*     Expanded(
                     child: PrimaryButtonWidget(
                       title: 'Add More',
@@ -134,8 +146,6 @@ class LicenceScreenMobile extends GetView<LicenceController> {
                       onPressed: controller.pickImage,
                     ),
                   ),*/
-
-
                 ],
               );
             }),

@@ -6,32 +6,7 @@ class CategoryScreenMobile extends GetView<CategoryController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        toolbarHeight: Dimensions.appBarHeight * 2.25,
-        flexibleSpace: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: Dimensions.defaultHorizontalSize,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AppBarLogoWidget(),
-                TextWidget(
-                  'My Verified Service',
-                  color: CustomColors.blackColor,
-                  fontSize: Dimensions.titleMedium * 1.2,
-                  fontWeight: FontWeight.w600,
-                ),
-
-                /// NOTIFICATION ICON
-                NotificationIcon(),
-              ],
-            ),
-          ),
-        ),
-      ),
+      appBar: CommonAppbar(title: "Categories"),
       body: SafeArea(child: ExpandableCardList()),
     );
   }

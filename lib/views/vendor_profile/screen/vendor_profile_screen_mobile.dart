@@ -20,7 +20,7 @@ class VendorProfileScreenMobile extends GetView<VendorProfileController> {
         ? ApiEndPoints.googleApiKeyAndroid
         : ApiEndPoints.googleApiKeyIos;
     return Scaffold(
-      appBar: CommonAppBar(title: 'Edit Profile'),
+      appBar: AuthAppBar(title: 'Edit Profile'),
       body: SafeArea(
         child: Obx(
           () => controller.isLoading.value
@@ -44,7 +44,8 @@ class VendorProfileScreenMobile extends GetView<VendorProfileController> {
                                   : CachedNetworkImage(
                                       imageUrl:
                                           Get.find<ProfileController>()
-                                              .providerProfileModel.value
+                                              .providerProfileModel
+                                              .value
                                               ?.data
                                               .profileImage ??
                                           "",

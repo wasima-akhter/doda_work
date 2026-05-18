@@ -6,7 +6,7 @@ class CongratulationsScreenMobile extends GetView<CongratulationsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: CommonAppBar(title: ""),
+      // appBar: AuthAppBar(title: ""),
       bottomNavigationBar: PrimaryButtonWidget(
         padding: EdgeInsets.symmetric(
           horizontal: Dimensions.defaultHorizontalSize,
@@ -21,8 +21,8 @@ class CongratulationsScreenMobile extends GetView<CongratulationsController> {
           child: ConfirmationWidget(
             title: 'Payment Completed',
             subtitle: 'Your transaction has been processed successfully',
-          )
           ),
+        ),
       ),
     );
   }
@@ -34,7 +34,7 @@ class Congratulation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: CommonAppBar(title: ""),
+      // appBar: AuthAppBar(title: ""),
       bottomNavigationBar: PrimaryButtonWidget(
         padding: EdgeInsets.symmetric(
           horizontal: Dimensions.defaultHorizontalSize,
@@ -59,8 +59,6 @@ You can see from my Product"
   }
 }
 
-
-
 class ConfirmationWidget extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -82,7 +80,11 @@ class ConfirmationWidget extends StatelessWidget {
         crossAxisAlignment: crossCenter,
         mainAxisAlignment: mainCenter,
         children: [
-        Icon(Icons.verified_rounded,size: Dimensions.iconSizeLarge * 5,color: CustomColors.primary,),
+          Icon(
+            Icons.verified_rounded,
+            size: Dimensions.iconSizeLarge * 5,
+            color: CustomColors.primary,
+          ),
           TextWidget(
             padding: EdgeInsetsGeometry.only(
               top: Dimensions.heightSize * 2,

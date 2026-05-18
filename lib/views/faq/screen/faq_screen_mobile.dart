@@ -6,36 +6,38 @@ class FaqScreenMobile extends GetView<FaqController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: "Faq"),
+      appBar: AuthAppBar(title: "Faq"),
       body: SafeArea(
         child: Obx(
-              () => controller.isLoading.value ? LoadingWidget() : controller.faqList.isEmpty ? EmptyDataWidget()
-
-          : SingleChildScrollView(
-            child: Padding(
-              padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
-              child: Column(
-                crossAxisAlignment: crossStart,
-                children: List.generate(controller.faqList.length, (
-                    index,
-                    ) {
-                  final faq = controller.faqList[index];
-                  return Column(
-                    children: [
-                      _buildFaqItem(
-                        title: faq.question,
-                        content: faq.description,
-                        isExpanded:
-                        controller.expandedIndex.value == index,
-                        onTap: () => controller.toggleExpand(index),
-                      ),
-                      _buildDivider(),
-                    ],
-                  );
-                }),
-              ),
-            ),
-          ),
+          () => controller.isLoading.value
+              ? LoadingWidget()
+              : controller.faqList.isEmpty
+              ? EmptyDataWidget()
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
+                    child: Column(
+                      crossAxisAlignment: crossStart,
+                      children: List.generate(controller.faqList.length, (
+                        index,
+                      ) {
+                        final faq = controller.faqList[index];
+                        return Column(
+                          children: [
+                            _buildFaqItem(
+                              title: faq.question,
+                              content: faq.description,
+                              isExpanded:
+                                  controller.expandedIndex.value == index,
+                              onTap: () => controller.toggleExpand(index),
+                            ),
+                            _buildDivider(),
+                          ],
+                        );
+                      }),
+                    ),
+                  ),
+                ),
         ),
       ),
     );
@@ -82,11 +84,9 @@ class FaqScreenMobile extends GetView<FaqController> {
           height: isExpanded ? null : 0,
           child: isExpanded
               ? Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: Text(
-              content,
-            ),
-          )
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Text(content),
+                )
               : const SizedBox(),
         ),
       ],

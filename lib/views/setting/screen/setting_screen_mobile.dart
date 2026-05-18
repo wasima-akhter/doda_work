@@ -7,7 +7,7 @@ class SettingScreenMobile extends GetView<SettingController> {
   Widget build(BuildContext context) {
     Get.put(SettingController());
     return Scaffold(
-      appBar: CommonAppBar(title: 'Account Setting'),
+      appBar: AuthAppBar(title: 'Account Setting'),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
@@ -16,13 +16,13 @@ class SettingScreenMobile extends GetView<SettingController> {
             _buildSectionCard(
               Icons.lock,
               'Change Password',
-                  () => Get.toNamed(Routes.changePasswordScreen),
+              () => Get.toNamed(Routes.changePasswordScreen),
               false,
             ),
             _buildSectionCard(
               Icons.person,
               'Delete Account',
-                  () => _showDeleteDialog(),
+              () => _showDeleteDialog(),
               true,
             ),
           ],
@@ -32,7 +32,7 @@ class SettingScreenMobile extends GetView<SettingController> {
   }
 
   void _showDeleteDialog() {
-    final controller =  Get.put(SettingController());
+    final controller = Get.put(SettingController());
 
     Get.dialog(
       AlertDialog(
@@ -48,15 +48,14 @@ class SettingScreenMobile extends GetView<SettingController> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: const [
-              TextWidget(
-                'Are you sure you want to Delete Account?',
-              ),
+              TextWidget('Are you sure you want to Delete Account?'),
             ],
           ),
         ),
         actionsPadding: EdgeInsets.symmetric(
-            horizontal: Dimensions.defaultHorizontalSize,
-            vertical: Dimensions.heightSize * 0.5),
+          horizontal: Dimensions.defaultHorizontalSize,
+          vertical: Dimensions.heightSize * 0.5,
+        ),
         actions: [
           ElevatedButton(
             onPressed: () {
@@ -71,7 +70,7 @@ class SettingScreenMobile extends GetView<SettingController> {
             child: TextWidget('No', color: CustomColors.whiteColor),
           ),
           Obx(
-                () => ElevatedButton(
+            () => ElevatedButton(
               onPressed: controller.isLoading.value
                   ? null
                   : () => controller.deleteUserAccount(),
@@ -84,13 +83,13 @@ class SettingScreenMobile extends GetView<SettingController> {
               ),
               child: controller.isLoading.value
                   ? SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  color: CustomColors.primary,
-                  strokeWidth: 2,
-                ),
-              )
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: CustomColors.primary,
+                        strokeWidth: 2,
+                      ),
+                    )
                   : TextWidget('Yes', color: CustomColors.rejected),
             ),
           ),
@@ -101,11 +100,11 @@ class SettingScreenMobile extends GetView<SettingController> {
   }
 
   _buildSectionCard(
-      IconData icon,
-      String title,
-      void Function()? onTap,
-      bool isRed,
-      ) {
+    IconData icon,
+    String title,
+    void Function()? onTap,
+    bool isRed,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(

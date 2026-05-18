@@ -6,7 +6,7 @@ class ChangePasswordScreenMobile extends GetView<ChangePasswordController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Change Password'),
+      appBar: AuthAppBar(title: 'Change Password'),
       body: SafeArea(
         child: Form(
           key: controller.formKey,

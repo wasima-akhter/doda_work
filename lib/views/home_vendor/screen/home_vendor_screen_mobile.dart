@@ -27,7 +27,7 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
           SliverPersistentHeader(
             pinned: true,
             delegate: StickyHeaderDelegate(
-              height: 170.h, // adjust based on your UI
+              height: 105.h, // adjust based on your UI
               child: Container(
                 color: Colors.white,
                 child: Column(
@@ -54,7 +54,16 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Column(children: [Obx(() => _buildTabBar(controller))]),
+        child: Column(
+          children: [
+            Obx(
+              () => Container(
+                // color: Colors.green,
+                child: _buildTabBar(controller),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

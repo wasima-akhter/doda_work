@@ -1,7 +1,8 @@
-import '../../../core/api/services/api.dart';
-import '../../../core/utils/basic_import.dart';
 import 'package:doda_work/views/home/model/home_model.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
+import '../../../core/api/services/api.dart';
+import '../../../core/utils/basic_import.dart';
 import '../../../widgets/web_payment_widget.dart';
 import '../model/provider_status_response_model.dart';
 
@@ -63,20 +64,26 @@ class HomeVendorController extends GetxController {
       endPoint: ApiEndPoints.providerChangeStatus(),
       isLoading: isAcceptLoading,
       body: inputBody,
+
+      // In acceptRequest — no changes needed except safety null-check
       onSuccess: (result) {
         if (result.data.requiresPayment) {
-          paymentUrl.value = result.data.paymentUrl;
+          final url = result.data.paymentUrl;
 
-          debugPrint("🔗 Payment URL: ${result.data.paymentUrl}");
+          if (url.isEmpty) {
+            CustomSnackBar.error("Payment URL missing");
+            return;
+          }
+
+          paymentUrl.value = url;
+          debugPrint("🔗 Payment URL: $url");
 
           Get.back();
-
-          Future.delayed(Duration(milliseconds: 100), () {
-            Get.to(() => WebPaymentScreen());
+          Future.delayed(const Duration(milliseconds: 100), () {
+            Get.to(() => const WebPaymentScreen());
           });
         } else {
           Get.back();
-
           CustomSnackBar.success(
             title: "Success",
             message: result.data.message,
@@ -85,7 +92,6 @@ class HomeVendorController extends GetxController {
 
         refreshAll();
       },
-
     );
   }
 
@@ -103,10 +109,14 @@ class HomeVendorController extends GetxController {
         );
 
         final awaitingResponse = await ApiClient.get(
-          url: ApiEndPoints.providerService(status: "AWAITING_PAYMENT", page: pageKey),
+          url: ApiEndPoints.providerService(
+            status: "AWAITING_PAYMENT",
+            page: pageKey,
+          ),
         );
 
-        if (pendingResponse.statusCode == 200 && awaitingResponse.statusCode == 200) {
+        if (pendingResponse.statusCode == 200 &&
+            awaitingResponse.statusCode == 200) {
           final pendingModel = HomeModel.fromJson(pendingResponse.body);
           final awaitingModel = HomeModel.fromJson(awaitingResponse.body);
 
@@ -141,6 +151,7 @@ class HomeVendorController extends GetxController {
       isLoadingMap[status] = false;
     }
   }
+
   Future<void> _handleSuccessResponse(
     dynamic response,
     PagingController<int, HomeServiceItem> controller,
@@ -223,7 +234,6 @@ class HomeVendorController extends GetxController {
     );
   }
 
-
   void _handleStatusChangeException(Object e) {
     Get.snackbar(
       "Error",
@@ -235,18 +245,14 @@ class HomeVendorController extends GetxController {
     debugPrint('Error changing status: $e');
   }
 
-
   Future<void> declineRequest({required String id}) async {
     if (isLoading.value) return;
     isLoading.value = true;
 
     try {
       final response = await ApiClient.patch(
-        body: {
-          "requestId": id,
-          "action": "DECLINED",
-        },
-        url: '${ApiEndPoints.baseUrl}${ApiEndPoints.providerChangeStatus()}'
+        body: {"requestId": id, "action": "DECLINED"},
+        url: '${ApiEndPoints.baseUrl}${ApiEndPoints.providerChangeStatus()}',
       );
 
       if (response.statusCode == 200) {
@@ -272,7 +278,6 @@ class HomeVendorController extends GetxController {
       isLoading.value = false;
     }
   }
-
 
   Future<void> refreshAll() async {
     for (final controller in pagingControllers.values) {

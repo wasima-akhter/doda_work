@@ -5,12 +5,11 @@ class UpdateScreenMobile extends GetView<UpdateController> {
 
   @override
   Widget build(BuildContext context) {
-
     var apiKeyMap = Platform.isAndroid
         ? ApiEndPoints.googleApiKeyAndroid
         : ApiEndPoints.googleApiKeyIos;
     return Scaffold(
-      appBar: CommonAppBar(title: 'Update Profile'),
+      appBar: AuthAppBar(title: 'Update Profile'),
       body: SafeArea(
         child: ListView(
           padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
@@ -30,7 +29,13 @@ class UpdateScreenMobile extends GetView<UpdateController> {
                                 fit: BoxFit.cover,
                               )
                             : CachedNetworkImage(
-                                imageUrl: Get.find<ProfileController>().userProfileModel.value?.data?.profileImage ?? "",
+                                imageUrl:
+                                    Get.find<ProfileController>()
+                                        .userProfileModel
+                                        .value
+                                        ?.data
+                                        ?.profileImage ??
+                                    "",
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) =>
                                     Container(color: Colors.grey.shade300),
@@ -94,13 +99,16 @@ class UpdateScreenMobile extends GetView<UpdateController> {
                 if (formatted != value) {
                   controller.numberController.value = TextEditingValue(
                     text: formatted,
-                    selection: TextSelection.collapsed(offset: formatted.length),
+                    selection: TextSelection.collapsed(
+                      offset: formatted.length,
+                    ),
                   );
                 }
               },
             ),
 
             Space.height.betweenInputBox,
+
             // CustomDatePick(
             //   hint: "Select Date of Birth",
             //   initialDate: DateTime.tryParse(
@@ -110,7 +118,6 @@ class UpdateScreenMobile extends GetView<UpdateController> {
             //     controller.updatedDate.value = value.toIso8601String();
             //   },
             // ),
-
             Space.height.betweenInputBox,
 
             TextWidget(
@@ -129,12 +136,13 @@ class UpdateScreenMobile extends GetView<UpdateController> {
               final isPick = controller.selectedAddress.isNotEmpty;
               return GestureDetector(
                 onTap: () {
-                  Get.to(() => LocationPickerWidget(
-                    selectedAddress: controller.selectedAddress,
-                    selectedLatLng: controller.selectedLatLng,
-                    googleApiKey: apiKeyMap,
-
-                  ));
+                  Get.to(
+                    () => LocationPickerWidget(
+                      selectedAddress: controller.selectedAddress,
+                      selectedLatLng: controller.selectedLatLng,
+                      googleApiKey: apiKeyMap,
+                    ),
+                  );
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,
@@ -182,5 +190,4 @@ class UpdateScreenMobile extends GetView<UpdateController> {
       ),
     );
   }
-
 }

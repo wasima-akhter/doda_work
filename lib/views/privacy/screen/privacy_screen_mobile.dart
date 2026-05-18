@@ -6,7 +6,7 @@ class PrivacyScreenMobile extends GetView<PrivacyController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Privacy Policy'),
+      appBar: AuthAppBar(title: 'Privacy Policy'),
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading.value) {
@@ -38,9 +38,7 @@ class PrivacyScreenMobile extends GetView<PrivacyController> {
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
-                      "u": Style(
-                        textDecoration: TextDecoration.underline,
-                      ),
+                      "u": Style(textDecoration: TextDecoration.underline),
                     },
                   ),
                 ),

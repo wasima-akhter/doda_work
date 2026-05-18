@@ -1,4 +1,5 @@
 import 'package:doda_work/views/review_rating/screen/review_rating_screen.dart';
+
 import '../../../core/utils/basic_import.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../widgets/auth_app_bar.dart';
@@ -13,7 +14,7 @@ class ReviewRatingScreenMobile extends GetView<ReviewRatingController> {
     controller.getProviderReviews();
 
     return Scaffold(
-      appBar: CommonAppBar(title: 'Customer Review'),
+      appBar: AuthAppBar(title: 'Customer Review'),
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading.value) {
@@ -35,8 +36,7 @@ class ReviewRatingScreenMobile extends GetView<ReviewRatingController> {
           return ListView(
             padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
             children: [
-              TopTextWidget(
-              ),
+              TopTextWidget(),
 
               const SizedBox(height: 16),
 

@@ -43,6 +43,12 @@ class CustomStatusCardWidget extends StatelessWidget {
         ? '\$${(leadPrice! / 100).toStringAsFixed(2)}'
         : 'N/A';
 
+    final bool hasActions =
+        (!isUser && status == "PENDING") ||
+        (!isUser && status == "ONGOING") ||
+        (!isUser && status == "ACCEPTED") ||
+        (isUser && status == "ONGOING");
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -52,7 +58,7 @@ class CustomStatusCardWidget extends StatelessWidget {
           border: Border.all(color: Colors.grey.withAlpha(555)),
           borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),
         ),
-        constraints: BoxConstraints(minHeight: 130.h),
+        constraints: BoxConstraints(minHeight: hasActions ? 130.h : 100.h),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -64,7 +70,7 @@ class CustomStatusCardWidget extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: image ?? '',
                 width: 100.w,
-                height: 130.h,
+                height: hasActions ? 130.h : 100.h,
                 placeholder: (context, url) =>
                     Container(color: Colors.grey.shade300),
                 errorWidget: (context, url, error) => Container(
@@ -82,7 +88,7 @@ class CustomStatusCardWidget extends StatelessWidget {
             /*
             Expanded(
               child: SizedBox(
-                // height: 130.h,
+                // height: hasActions ? 130.h : 100.h,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -372,7 +378,9 @@ class CustomStatusCardWidget extends StatelessWidget {
             Expanded(
               child: Container(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: 130.h),
+                  constraints: BoxConstraints(
+                    minHeight: hasActions ? 130.h : 100.h,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

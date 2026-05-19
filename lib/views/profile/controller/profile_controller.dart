@@ -2,13 +2,16 @@ import 'package:doda_work/core/api/services/api.dart';
 import 'package:doda_work/core/utils/app_storage.dart';
 import 'package:doda_work/core/utils/basic_import.dart';
 import 'package:doda_work/views/profile/model/user_profile_model.dart';
+
+import '../../../widgets/success_dialog.dart';
 import '../model/provider_model.dart';
 
 class ProfileController extends GetxController {
   RxBool isLoading = false.obs;
 
   final Rxn<UserProfileModel> userProfileModel = Rxn<UserProfileModel>();
-  final Rxn<ProviderProfileModels> providerProfileModel = Rxn<ProviderProfileModels>();
+  final Rxn<ProviderProfileModels> providerProfileModel =
+      Rxn<ProviderProfileModels>();
 
   @override
   void onInit() {
@@ -55,5 +58,103 @@ class ProfileController extends GetxController {
     } catch (e) {
       debugPrint("Error fetching provider profile: $e");
     }
+  }
+
+  //-------------------
+  //-------------------
+  //------------------
+  RxBool isOnline = false.obs;
+  RxBool isToggleLoading = false.obs;
+
+  Future<void> toggleOnlineStatus(bool value) async {
+    final oldValue = isOnline.value;
+
+    // optimistic update
+    isOnline.value = value;
+
+    try {
+      await ApiRequest.patch(
+        fromJson: ToggleOnlineResponse.fromJson,
+        endPoint: 'provider/toggle-online',
+
+        body: {"isOnline": value.toString()},
+
+        isLoading: isToggleLoading,
+
+        showSuccessSnackBar: false,
+
+        onSuccess: (response) {
+          SuccessDialog.show(
+            title: "Success",
+            subtitle: response.message ?? '',
+            onTap: () {
+              Get.back();
+            },
+          );
+        },
+      );
+    } catch (e) {
+      // rollback if failed
+      isOnline.value = oldValue;
+
+      debugPrint('🔴 Toggle Error: $e');
+    }
+  }
+}
+
+class ToggleOnlineResponse {
+  final int? statusCode;
+  final bool? success;
+  final String? message;
+  final ToggleOnlineData? data;
+
+  ToggleOnlineResponse({
+    this.statusCode,
+    this.success,
+    this.message,
+    this.data,
+  });
+
+  factory ToggleOnlineResponse.fromJson(Map<String, dynamic> json) {
+    return ToggleOnlineResponse(
+      statusCode: json["statusCode"],
+      success: json["success"],
+      message: json["message"],
+      data: json["data"] != null
+          ? ToggleOnlineData.fromJson(json["data"])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "statusCode": statusCode,
+      "success": success,
+      "message": message,
+      "data": data?.toJson(),
+    };
+  }
+}
+
+class ToggleOnlineData {
+  final bool? isOnline;
+  final DateTime? lastOnlineAt;
+
+  ToggleOnlineData({this.isOnline, this.lastOnlineAt});
+
+  factory ToggleOnlineData.fromJson(Map<String, dynamic> json) {
+    return ToggleOnlineData(
+      isOnline: json["isOnline"],
+      lastOnlineAt: json["lastOnlineAt"] != null
+          ? DateTime.parse(json["lastOnlineAt"])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "isOnline": isOnline,
+      "lastOnlineAt": lastOnlineAt?.toIso8601String(),
+    };
   }
 }

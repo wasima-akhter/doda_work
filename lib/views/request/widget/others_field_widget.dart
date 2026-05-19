@@ -39,8 +39,10 @@ class OthersFieldWidget extends StatelessWidget {
                   children: [
                     const Text(
                       "No categories found.",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     ElevatedButton.icon(
@@ -49,7 +51,9 @@ class OthersFieldWidget extends StatelessWidget {
                       label: const Text("Fetch Again"),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -67,10 +71,12 @@ class OthersFieldWidget extends StatelessWidget {
                   hint: 'Select Category',
                   label: "Service Category",
                   items: categoryController.filteredCategory
-                      .map((c) => DropdownMenuItem<String>(
-                            value: c.id,
-                            child: Text(c.name ?? ''),
-                          ))
+                      .map(
+                        (c) => DropdownMenuItem<String>(
+                          value: c.id,
+                          child: Text(c.name ?? ''),
+                        ),
+                      )
                       .toList(),
                   onChanged: (value) {
                     if (value != null) controller.onCategorySelected(value);
@@ -84,10 +90,12 @@ class OthersFieldWidget extends StatelessWidget {
                   hint: 'Select Subcategory',
                   label: "Sub Category",
                   items: categoryController.availableSubcategories
-                      .map((s) => DropdownMenuItem<String>(
-                            value: s.id,
-                            child: Text(s.name ?? ''),
-                          ))
+                      .map(
+                        (s) => DropdownMenuItem<String>(
+                          value: s.id,
+                          child: Text(s.name ?? ''),
+                        ),
+                      )
                       .toList(),
                   onChanged: (value) {
                     if (value != null) controller.onSubCategorySelected(value);
@@ -108,10 +116,8 @@ class OthersFieldWidget extends StatelessWidget {
                 : controller.selectedPriority.value,
             items: const [
               DropdownMenuItem<String>(value: "Low", child: Text("Low")),
-              DropdownMenuItem<String>(
-                  value: "Normal", child: Text("Normal")),
-              DropdownMenuItem<String>(
-                  value: "Urgent", child: Text("Urgent")),
+              DropdownMenuItem<String>(value: "Normal", child: Text("Normal")),
+              DropdownMenuItem<String>(value: "Urgent", child: Text("Urgent")),
             ],
             onChanged: (value) {
               if (value != null) {
@@ -139,29 +145,38 @@ class OthersFieldWidget extends StatelessWidget {
             final isPick = controller.selectedAddress.isNotEmpty;
             return GestureDetector(
               onTap: () {
-                Get.to(() => LocationPickerWidget(
-                      selectedAddress: controller.selectedAddress,
-                      selectedLatLng: controller.selectedLatLng,
-                      googleApiKey: apiKeyMap,
-                      initialLatLng:
-                          const LatLng(57.77626523533849, -101.67807676458044),
-                    ));
+                Get.to(
+                  () => LocationPickerWidget(
+                    selectedAddress: controller.selectedAddress,
+                    selectedLatLng: controller.selectedLatLng,
+                    googleApiKey: apiKeyMap,
+                    initialLatLng: const LatLng(
+                      57.77626523533849,
+                      -101.67807676458044,
+                    ),
+                  ),
+                );
               },
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                      color: isPick
-                          ? CustomColors.primary
-                          : CustomColors.disableColor,
-                      width: 1.4),
+                    color: isPick
+                        ? CustomColors.primary
+                        : CustomColors.disableColor,
+                    width: 1.4,
+                  ),
                 ),
                 child: Text(
-                  isPick ? controller.selectedAddress.value : "Pick Service Address",
+                  isPick
+                      ? controller.selectedAddress.value
+                      : "Pick Service Address",
                   style: TextStyle(
                     fontSize: Dimensions.titleSmall,
                     fontWeight: FontWeight.w500,

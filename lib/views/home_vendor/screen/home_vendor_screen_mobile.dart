@@ -35,7 +35,7 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
                     WelcomeSection(),
 
                     Padding(
-                      padding: EdgeInsets.all(12.w),
+                      padding: EdgeInsets.all(6.w),
                       child: Obx(() => _buildTabBar(controller)),
                     ),
                   ],
@@ -154,6 +154,7 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
   }
 
   Widget _buildRequestCard(HomeServiceItem item, String status, int itemIndex) {
+    debugPrint("item.postalCode : ${item.postalCode}");
     return CustomStatusCardWidget(
       index: itemIndex,
       customerId: item.customerId,
@@ -161,7 +162,7 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
       category: item.serviceCategory?.name ?? "No Category",
 
       subCategory: item.subcategory ?? "No Subcategory",
-      address: 'Postal Code : ${item.postalCode ?? ""}',
+      address: 'Postal Code : ${item.postalCode ?? "--"}',
       image: (item.attachments.isNotEmpty) ? item.attachments.first : '',
       leadPrice: item.leadPrice,
       status: status,

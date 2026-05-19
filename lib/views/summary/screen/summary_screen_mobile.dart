@@ -52,11 +52,9 @@ class SummaryScreenMobile extends GetView<SummaryController> {
                             model.status == 'APPROVED'
                         ? () {}
                         : () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return CompleteTaskDialog(model: model);
-                              },
+                            Get.dialog(
+                              CompleteTaskDialog(model: model),
+                              barrierDismissible: true,
                             );
                           },
                   ),

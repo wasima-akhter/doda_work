@@ -6,6 +6,7 @@ import 'package:http/http.dart' hide MultipartFile;
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+
 import '../../../core/api/end_point/api_end_points.dart';
 import '../../../core/api/services/api.dart';
 import '../../../core/helpers/helpers.dart';
@@ -31,10 +32,11 @@ class InboxController extends GetxController {
     if (receiverId?.isNotEmpty ?? false) getOldMessages();
   }
 
-   late io.Socket socket;
+  late io.Socket socket;
   final String myId = AppStorage.uId;
   RxList<Map<String, dynamic>> messagesList = <Map<String, dynamic>>[].obs;
 
+  /*
   void _initSocket() {
     socket = io.io(
       "http://10.10.20.52:6002"
@@ -89,6 +91,110 @@ class InboxController extends GetxController {
     socket.on("conversation_update/$myId", (data) {
       debugPrint("🔄 Conversation updated: $data");
     });
+  }
+*/
+  void _initSocket() {
+    debugPrint("🟡 [SOCKET] initSocket() called");
+
+    final url =
+        "${ApiEndPoints.mainDomain}"
+        "?id=$myId&role=${AppStorage.users}";
+    debugPrint("socket url: $url");
+
+    socket = io.io(
+      url,
+      io.OptionBuilder()
+          .setTransports(['websocket'])
+          .enableAutoConnect()
+          .setReconnectionAttempts(10)
+          .build(),
+    );
+
+    debugPrint("🟡 [SOCKET] instance created");
+
+    /// ================= CORE EVENTS =================
+
+    socket.onConnect((_) {
+      debugPrint("🟢 [SOCKET] CONNECTED ✔");
+      debugPrint("🟢 [SOCKET] socket id: ${socket.id}");
+
+      socket.emit("test_ping", {"id": myId});
+      debugPrint("📤 [SOCKET] test_ping emitted");
+    });
+
+    socket.onConnectError((err) {
+      debugPrint("🔴 [SOCKET] CONNECT ERROR:");
+      debugPrint(err.toString());
+    });
+
+    socket.onError((err) {
+      debugPrint("🔴 [SOCKET] ERROR:");
+      debugPrint(err.toString());
+    });
+
+    socket.onDisconnect((reason) {
+      debugPrint("⚫ [SOCKET] DISCONNECTED");
+      debugPrint("⚫ reason: $reason");
+    });
+
+    socket.onReconnect((_) {
+      debugPrint("🔄 [SOCKET] reconnecting...");
+    });
+
+    socket.onReconnectAttempt((_) {
+      debugPrint("🟡 [SOCKET] reconnect attempt...");
+    });
+
+    socket.onReconnectError((err) {
+      debugPrint("🔴 [SOCKET] reconnect error: $err");
+    });
+
+    socket.onReconnectFailed((_) {
+      debugPrint("❌ [SOCKET] reconnect failed");
+    });
+
+    /// ================= LOW LEVEL DEBUG (VERY IMPORTANT) =================
+    socket.onAny((event, data) {
+      debugPrint("📡 [SOCKET EVENT] $event → $data");
+    });
+
+    /// ================= YOUR MESSAGE LISTENER =================
+    socket.on("message_new/$receiverId", (data) {
+      debugPrint("📩 [MESSAGE RECEIVED] raw: $data");
+
+      if (data == null) {
+        debugPrint("⚠️ null message payload");
+        return;
+      }
+
+      if (data["sender"]?["id"] == myId) {
+        debugPrint("⏭️ skipping own message");
+        return;
+      }
+
+      List<String> imagesList = [];
+
+      if (data["images"] is List) {
+        imagesList = (data["images"] as List).map((e) => e.toString()).toList();
+      }
+
+      messagesList.add({
+        "message": data["text"] ?? '',
+        "isMe": false,
+        "type": imagesList.isNotEmpty ? "image" : "text",
+        "images": imagesList,
+        "video": data["video"] ?? "",
+        "isUploading": false,
+      });
+
+      shouldAutoScroll.value = true;
+
+      debugPrint("✅ [MESSAGE ADDED TO LIST]");
+    });
+
+    /// ================= CONNECT =================
+    debugPrint("🟡 [SOCKET] calling connect()");
+    socket.connect();
   }
 
   // ============= Get Old Messages =============
@@ -179,8 +285,8 @@ class InboxController extends GetxController {
     if (path.startsWith('http://') || path.startsWith('https://')) {
       return path; // Already full URL
     }
-    // Backend base URL + path (backslash replace করা)
-    return 'http://10.10.20.52:6002/$path'.replaceAll('\\', '/');
+    // Backend base URL + path
+    return '${ApiEndPoints.mainDomain}/$path'.replaceAll('\\', '/');
   }
 
   // ============= Send Message =============
@@ -296,7 +402,13 @@ class InboxController extends GetxController {
   Future<List<String>> _uploadImages(List<XFile> images) async {
     try {
       final List<String> uploadedPaths = [];
-      final dio = Dio();
+      final dio = Dio(
+        BaseOptions(
+          connectTimeout: const Duration(seconds: 20),
+          receiveTimeout: const Duration(seconds: 20),
+          sendTimeout: const Duration(seconds: 20),
+        ),
+      );
 
       for (int i = 0; i < images.length; i++) {
         final image = images[i];
@@ -322,11 +434,14 @@ class InboxController extends GetxController {
           ),
         });
 
-        debugPrint('📤 Uploading image ${i + 1}/${images.length}: ${image.name}');
+        debugPrint(
+          '📤 Uploading image ${i + 1}/${images.length}: ${image.name}',
+        );
 
         final response = await dio.post(
-          'http://10.10.20.52:6002/chat/chat-images-video',
+          '${ApiEndPoints.mainDomain}/chat/chat-images-video',
           data: formData,
+
           options: Options(
             headers: {
               'Authorization': 'Bearer ${AppStorage.token}',
@@ -508,49 +623,51 @@ class InboxController extends GetxController {
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library, color: Colors.blue),
-              title: const Text('Choose from Gallery'),
-              subtitle: Text('Select up to $maxImageCount images'),
-              onTap: () {
-                Get.back();
-                pickImagesFromGallery();
-              },
-            ),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.camera_alt, color: Colors.green),
-              title: const Text('Take Photo'),
-              onTap: () {
-                Get.back();
-                pickImageFromCamera();
-              },
-            ),
-            if (selectedImages.isNotEmpty) ...[
-              const SizedBox(height: 8),
               ListTile(
-                leading: const Icon(Icons.delete_outline, color: Colors.red),
-                title: const Text('Clear All Images'),
-                subtitle: Text('${selectedImages.length} image(s) selected'),
+                leading: const Icon(Icons.photo_library, color: Colors.blue),
+                title: const Text('Choose from Gallery'),
+                subtitle: Text('Select up to $maxImageCount images'),
                 onTap: () {
                   Get.back();
-                  clearAllImages();
+                  pickImagesFromGallery();
                 },
               ),
+              const SizedBox(height: 8),
+              ListTile(
+                leading: const Icon(Icons.camera_alt, color: Colors.green),
+                title: const Text('Take Photo'),
+                onTap: () {
+                  Get.back();
+                  pickImageFromCamera();
+                },
+              ),
+              if (selectedImages.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                ListTile(
+                  leading: const Icon(Icons.delete_outline, color: Colors.red),
+                  title: const Text('Clear All Images'),
+                  subtitle: Text('${selectedImages.length} image(s) selected'),
+                  onTap: () {
+                    Get.back();
+                    clearAllImages();
+                  },
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

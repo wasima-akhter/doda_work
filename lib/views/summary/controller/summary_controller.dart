@@ -1,7 +1,9 @@
 import 'dart:io';
+
 import 'package:doda_work/core/api/model/basic_success_model.dart';
 import 'package:doda_work/routes/routes.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../../../core/api/services/api.dart';
 import '../../../core/utils/basic_import.dart';
 import '../model/summary_model.dart';
@@ -54,8 +56,6 @@ class SummaryController extends GetxController {
     );
   }
 
-
-
   // review
 
   final TextEditingController reviewController = TextEditingController();
@@ -73,11 +73,15 @@ class SummaryController extends GetxController {
           left: Dimensions.horizontalSize,
           right: Dimensions.horizontalSize,
           top: Dimensions.verticalSize,
-          bottom: MediaQuery.of(Get.context!).viewInsets.bottom + Dimensions.verticalSize,
+          bottom:
+              MediaQuery.of(Get.context!).viewInsets.bottom +
+              Dimensions.verticalSize,
         ),
         decoration: BoxDecoration(
           color: CustomColors.whiteColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.radius * 2)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(Dimensions.radius * 2),
+          ),
         ),
         child: Column(
           mainAxisSize: mainMin,
@@ -108,20 +112,26 @@ class SummaryController extends GetxController {
             Space.height.v20,
 
             // Rating
-            TextWidget('Rating', fontSize: Dimensions.titleSmall, fontWeight: FontWeight.w600),
+            TextWidget(
+              'Rating',
+              fontSize: Dimensions.titleSmall,
+              fontWeight: FontWeight.w600,
+            ),
             Space.height.v10,
-            Obx(() => Row(
-              children: List.generate(5, (index) {
-                return GestureDetector(
-                  onTap: () => rating.value = (index + 1).toDouble(),
-                  child: Icon(
-                    index < rating.value ? Icons.star : Icons.star_border,
-                    color: Colors.orange,
-                    size: 32.h,
-                  ),
-                );
-              }),
-            )),
+            Obx(
+              () => Row(
+                children: List.generate(5, (index) {
+                  return GestureDetector(
+                    onTap: () => rating.value = (index + 1).toDouble(),
+                    child: Icon(
+                      index < rating.value ? Icons.star : Icons.star_border,
+                      color: Colors.orange,
+                      size: 32.h,
+                    ),
+                  );
+                }),
+              ),
+            ),
             Space.height.v20,
 
             // Review input
@@ -135,11 +145,14 @@ class SummaryController extends GetxController {
             Space.height.v20,
 
             // Buttons
-            Obx(() => PrimaryButtonWidget(
-              title: 'Approve with Review',
-              isLoading: isLoadingReview.value,
-              onPressed: () => _submitReviewAndApprove(id: id, providerId: providerId),
-            )),
+            Obx(
+              () => PrimaryButtonWidget(
+                title: 'Approve with Review',
+                isLoading: isLoadingReview.value,
+                onPressed: () =>
+                    _submitReviewAndApprove(id: id, providerId: providerId),
+              ),
+            ),
             Space.height.v10,
             PrimaryButtonWidget(
               title: 'Approve without Review',
@@ -158,7 +171,10 @@ class SummaryController extends GetxController {
     );
   }
 
-  Future<void> _submitReviewAndApprove({required String id, required String providerId}) async {
+  Future<void> _submitReviewAndApprove({
+    required String id,
+    required String providerId,
+  }) async {
     if (rating.value == 0.0) {
       CustomSnackBar.error('Please select a rating');
       return;
@@ -181,7 +197,6 @@ class SummaryController extends GetxController {
     );
   }
 
-
   void showImageSourceOptions(BuildContext context) {
     Get.bottomSheet(
       Container(
@@ -192,32 +207,34 @@ class SummaryController extends GetxController {
             top: Radius.circular(Dimensions.radius * 2),
           ),
         ),
-        child: Column(
-          mainAxisSize: mainMin,
-          children: [
-            TextWidget(
-              'Select Image Source',
-              fontSize: Dimensions.titleLarge,
-              fontWeight: FontWeight.bold,
-            ),
-            Space.height.v20,
-            ListTile(
-              leading: Icon(Icons.photo_library, color: CustomColors.primary),
-              title: TextWidget('Gallery', fontSize: Dimensions.bodyLarge),
-              onTap: () {
-                Get.back();
-                pickImageFromGallery();
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.camera_alt, color: CustomColors.primary),
-              title: TextWidget('Camera', fontSize: Dimensions.bodyLarge),
-              onTap: () {
-                Get.back();
-                pickImageFromCamera();
-              },
-            ),
-          ],
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: mainMin,
+            children: [
+              TextWidget(
+                'Select Image Source',
+                fontSize: Dimensions.titleLarge,
+                fontWeight: FontWeight.bold,
+              ),
+              Space.height.v20,
+              ListTile(
+                leading: Icon(Icons.photo_library, color: CustomColors.primary),
+                title: TextWidget('Gallery', fontSize: Dimensions.bodyLarge),
+                onTap: () {
+                  Get.back();
+                  pickImageFromGallery();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.camera_alt, color: CustomColors.primary),
+                title: TextWidget('Camera', fontSize: Dimensions.bodyLarge),
+                onTap: () {
+                  Get.back();
+                  pickImageFromCamera();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -239,7 +256,7 @@ class SummaryController extends GetxController {
       files: {'completionProof': selectedImage.value!},
       onSuccess: (result) {
         clearData();
-       Get.close(2);
+        Get.close(2);
       },
     );
   }

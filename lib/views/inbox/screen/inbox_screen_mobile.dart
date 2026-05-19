@@ -1,5 +1,7 @@
 import 'dart:io';
+
 import 'package:shimmer/shimmer.dart';
+
 import '../../../core/utils/basic_import.dart';
 import '../../../core/utils/extensions.dart';
 import '../../chat/widget/avatar.dart';
@@ -391,7 +393,9 @@ class InboxScreenMobile extends GetView<InboxController> {
                                   borderRadius: BorderRadius.circular(8),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.1),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.1,
+                                      ),
                                       blurRadius: 4,
                                       offset: const Offset(0, 2),
                                     ),
@@ -417,7 +421,9 @@ class InboxScreenMobile extends GetView<InboxController> {
                                       shape: BoxShape.circle,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withValues(alpha: 0.3),
+                                          color: Colors.black.withValues(
+                                            alpha: 0.3,
+                                          ),
                                           blurRadius: 4,
                                         ),
                                       ],
@@ -858,7 +864,6 @@ class InboxScreenMobile extends GetView<InboxController> {
                 color: Colors.grey[400],
               ),
               const SizedBox(height: 8),
-
             ],
           ),
         );

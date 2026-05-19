@@ -158,6 +158,10 @@ class HomeVendorController extends GetxController {
     int pageKey,
   ) async {
     try {
+      debugPrint(
+        "📦 BODY:\n${const JsonEncoder.withIndent('  ').convert(response.body)}",
+      );
+
       final homeModel = HomeModel.fromJson(response.body);
       final newItems = homeModel.data?.requests ?? [];
 
@@ -221,10 +225,10 @@ class HomeVendorController extends GetxController {
   }
 
   Future<void> _handleStatusChangeSuccess() async {
-    for (final controller in pagingControllers.values) {
-      controller.refresh();
+    for (final entry in pagingControllers.entries) {
+      entry.value.refresh();
+      fetch(entry.key, 1); // 🔥 FORCE RELOAD
     }
-
     Get.snackbar(
       "Success",
       "Status updated successfully!",

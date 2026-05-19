@@ -52,9 +52,9 @@ class HomeServiceItem {
     this.createdAt,
     this.updatedAt,
     this.requestId,
-    this.providerNotes, this.postalCode,
+    this.providerNotes,
+    this.postalCode,
     this.completedById,
-
   });
 
   factory HomeServiceItem.fromJson(Map<String, dynamic> json) =>
@@ -91,9 +91,8 @@ class HomeServiceItem {
         paymentStatus: json["paymentStatus"],
         completionProof: json["completionProof"] != null
             ? List<CompletionProof>.from(
-          json["completionProof"]
-              .map((x) => CompletionProof.fromJson(x)),
-        )
+                json["completionProof"].map((x) => CompletionProof.fromJson(x)),
+              )
             : [],
         potentialProviders: json["potentialProviders"] != null
             ? List<dynamic>.from(json["potentialProviders"])
@@ -106,7 +105,14 @@ class HomeServiceItem {
             : null,
         requestId: json["requestId"],
         providerNotes: json["providerNotes"],
-        completedById: json["completedBy"] != null ? json["completedBy"]["_id"] : null,
+
+        // // completedById: json["completedBy"] != null
+        // //     ? json["completedBy"]["_id"]
+        // //     : null,
+        // completedById: json["completedBy"],
+        completedById: json["completedBy"] is Map
+            ? json["completedBy"]["_id"]
+            : json["completedBy"],
       );
 }
 
@@ -147,13 +153,7 @@ class CustomerId {
   final String? avatar;
   final String? phoneNumber;
 
-  CustomerId({
-    this.id,
-    this.name,
-    this.email,
-    this.phoneNumber,
-    this.avatar,
-  });
+  CustomerId({this.id, this.name, this.email, this.phoneNumber, this.avatar});
 
   factory CustomerId.fromJson(Map<String, dynamic> json) => CustomerId(
     id: json["_id"],
@@ -172,11 +172,7 @@ class ServiceCategory {
   ServiceCategory({this.id, this.name, this.icon});
 
   factory ServiceCategory.fromJson(Map<String, dynamic> json) =>
-      ServiceCategory(
-        id: json["_id"],
-        name: json["name"],
-        icon: json["icon"],
-      );
+      ServiceCategory(id: json["_id"], name: json["name"], icon: json["icon"]);
 }
 
 class HomeModel {
@@ -205,7 +201,8 @@ class Data {
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     requests: json["requests"] != null
         ? List<HomeServiceItem>.from(
-        json["requests"].map((x) => HomeServiceItem.fromJson(x)))
+            json["requests"].map((x) => HomeServiceItem.fromJson(x)),
+          )
         : [],
     success: json["success"],
     message: json["message"],

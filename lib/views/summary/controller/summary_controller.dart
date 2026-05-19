@@ -83,89 +83,91 @@ class SummaryController extends GetxController {
             top: Radius.circular(Dimensions.radius * 2),
           ),
         ),
-        child: Column(
-          mainAxisSize: mainMin,
-          crossAxisAlignment: crossStart,
-          children: [
-            Center(
-              child: Container(
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: CustomColors.disableColor,
-                  borderRadius: BorderRadius.circular(10.r),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: mainMin,
+            crossAxisAlignment: crossStart,
+            children: [
+              Center(
+                child: Container(
+                  width: 40.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: CustomColors.disableColor,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
                 ),
               ),
-            ),
-            Space.height.v20,
-            TextWidget(
-              'Approve & Review',
-              fontSize: Dimensions.titleLarge,
-              fontWeight: FontWeight.bold,
-            ),
-            Space.height.v5,
-            TextWidget(
-              'Would you like to leave a review? (Optional)',
-              fontSize: Dimensions.bodyMedium,
-              color: CustomColors.grayShade,
-            ),
-            Space.height.v20,
-
-            // Rating
-            TextWidget(
-              'Rating',
-              fontSize: Dimensions.titleSmall,
-              fontWeight: FontWeight.w600,
-            ),
-            Space.height.v10,
-            Obx(
-              () => Row(
-                children: List.generate(5, (index) {
-                  return GestureDetector(
-                    onTap: () => rating.value = (index + 1).toDouble(),
-                    child: Icon(
-                      index < rating.value ? Icons.star : Icons.star_border,
-                      color: Colors.orange,
-                      size: 32.h,
-                    ),
-                  );
-                }),
+              Space.height.v20,
+              TextWidget(
+                'Approve & Review',
+                fontSize: Dimensions.titleLarge,
+                fontWeight: FontWeight.bold,
               ),
-            ),
-            Space.height.v20,
-
-            // Review input
-            PrimaryInputFieldWidget(
-              controller: reviewController,
-              hintText: 'Write your review...',
-              label: 'Review',
-              maxLines: 3,
-              requiredField: false,
-            ),
-            Space.height.v20,
-
-            // Buttons
-            Obx(
-              () => PrimaryButtonWidget(
-                title: 'Approve with Review',
-                isLoading: isLoadingReview.value,
-                onPressed: () =>
-                    _submitReviewAndApprove(id: id, providerId: providerId),
+              Space.height.v5,
+              TextWidget(
+                'Would you like to leave a review? (Optional)',
+                fontSize: Dimensions.bodyMedium,
+                color: CustomColors.grayShade,
               ),
-            ),
-            Space.height.v10,
-            PrimaryButtonWidget(
-              title: 'Approve without Review',
-              onPressed: () {
-                Get.back();
-                acceptApprove(id: id);
-              },
-              buttonColor: Colors.grey.shade200,
+              Space.height.v20,
 
-              buttonTextColor: CustomColors.blackColor,
-            ),
-            Space.height.v10,
-          ],
+              // Rating
+              TextWidget(
+                'Rating',
+                fontSize: Dimensions.titleSmall,
+                fontWeight: FontWeight.w600,
+              ),
+              Space.height.v10,
+              Obx(
+                () => Row(
+                  children: List.generate(5, (index) {
+                    return GestureDetector(
+                      onTap: () => rating.value = (index + 1).toDouble(),
+                      child: Icon(
+                        index < rating.value ? Icons.star : Icons.star_border,
+                        color: Colors.orange,
+                        size: 32.h,
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              Space.height.v20,
+
+              // Review input
+              PrimaryInputFieldWidget(
+                controller: reviewController,
+                hintText: 'Write your review...',
+                label: 'Review',
+                maxLines: 3,
+                requiredField: false,
+              ),
+              Space.height.v20,
+
+              // Buttons
+              Obx(
+                () => PrimaryButtonWidget(
+                  title: 'Approve with Review',
+                  isLoading: isLoadingReview.value,
+                  onPressed: () =>
+                      _submitReviewAndApprove(id: id, providerId: providerId),
+                ),
+              ),
+              Space.height.v10,
+              PrimaryButtonWidget(
+                title: 'Approve without Review',
+                onPressed: () {
+                  Get.back();
+                  acceptApprove(id: id);
+                },
+                buttonColor: Colors.grey.shade200,
+
+                buttonTextColor: CustomColors.blackColor,
+              ),
+              Space.height.v10,
+            ],
+          ),
         ),
       ),
     );

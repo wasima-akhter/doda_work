@@ -87,14 +87,12 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
 
   void _onTabChanged(int value) {
     controller.selectedStatus.value = value;
+
     final status = HomeVendorController.statusTypes[value];
     final pagingController = controller.pagingControllers[status]!;
 
-    if (pagingController.itemList == null ||
-        pagingController.itemList!.isEmpty ||
-        pagingController.error != null) {
-      controller.fetch(status, 1);
-    }
+    pagingController.refresh(); // 🔥 FORCE REFRESH EVERY TIME
+    controller.fetch(status, 1); // 🔥 ENSURE FIRST LOAD
   }
 
   Widget _buildTabItem(HomeVendorController controller, int index) {

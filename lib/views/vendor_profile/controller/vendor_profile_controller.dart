@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:doda_work/views/profile/controller/profile_controller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../../../core/api/services/api.dart';
 import '../../../core/utils/app_storage.dart';
 import '../../../core/utils/basic_import.dart';
@@ -31,41 +32,73 @@ class VendorProfileController extends GetxController {
   final RxString selectedAddress = "".obs;
   final RxList selectedServiceList = [].obs;
 
-
-
-
-
-
   @override
   void onInit() {
-
     super.onInit();
 
     getServiceCategory();
 
     // Debug: Print current storage state
     debugPrint('🔐 Storage State:');
-    debugPrint('   Token: ${AppStorage.token.isNotEmpty ? "Present" : "Empty"}');
+    debugPrint(
+      '   Token: ${AppStorage.token.isNotEmpty ? "Present" : "Empty"}',
+    );
     debugPrint('   Is Vendor: ${AppStorage.isVendor}');
     debugPrint('   Is Logged In: ${AppStorage.isLoggedIn}');
 
+    nameController.text =
+        Get.find<ProfileController>()
+            .providerProfileModel
+            .value
+            ?.data
+            .companyName ??
+        "";
+    contactPersonController.text =
+        Get.find<ProfileController>()
+            .providerProfileModel
+            .value
+            ?.data
+            .contactPerson ??
+        "";
+    coveredRadius.text =
+        Get.find<ProfileController>()
+            .providerProfileModel
+            .value
+            ?.data
+            .coveredRadius
+            .toString() ??
+        "";
+    websiteController.text =
+        Get.find<ProfileController>().providerProfileModel.value?.data.website
+            .toString() ??
+        "";
+    selectedAddress.value =
+        Get.find<ProfileController>()
+            .providerProfileModel
+            .value
+            ?.data
+            .serviceLocation ??
+        "";
 
-    nameController.text = Get.find<ProfileController>().providerProfileModel.value?.data.companyName ?? "";
-    contactPersonController.text = Get.find<ProfileController>().providerProfileModel.value?.data.contactPerson ?? "";
-    coveredRadius.text = Get.find<ProfileController>().providerProfileModel.value?.data.coveredRadius.toString() ?? "";
-    websiteController.text = Get.find<ProfileController>().providerProfileModel.value?.data.website.toString() ?? "";
-    selectedAddress.value = Get.find<ProfileController>().providerProfileModel.value?.data.serviceLocation ?? "";
-
-    final lat = Get.find<ProfileController>().providerProfileModel.value?.data.latitude;
-    final lng = Get.find<ProfileController>().providerProfileModel.value?.data.longitude;
-
+    final lat =
+        Get.find<ProfileController>().providerProfileModel.value?.data.latitude;
+    final lng = Get.find<ProfileController>()
+        .providerProfileModel
+        .value
+        ?.data
+        .longitude;
 
     if (lat != null && lng != null) {
       selectedLatLng.value = LatLng(lat, lng);
     }
 
     selectedServiceList.addAll(
-      (Get.find<ProfileController>().providerProfileModel.value?.data.serviceCategories ?? [])
+      (Get.find<ProfileController>()
+                  .providerProfileModel
+                  .value
+                  ?.data
+                  .serviceCategories ??
+              [])
           .map((e) => e.id)
           .toList(),
     );
@@ -75,8 +108,6 @@ class VendorProfileController extends GetxController {
       isEmailValid.value = GetUtils.isEmail(email);
     });
   }
-
-
 
   // Other variables
   final _imagePicker = ImagePicker();

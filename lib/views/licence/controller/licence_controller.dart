@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:doda_work/core/utils/basic_import.dart';
 import 'package:doda_work/views/profile/controller/profile_controller.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,7 +15,12 @@ class LicenceController extends GetxController {
   void onInit() {
     super.onInit();
     oldPhotos.addAll(
-      Get.find<ProfileController>().providerProfileModel.value?.data.attachments ?? [],
+      Get.find<ProfileController>()
+              .providerProfileModel
+              .value
+              ?.data
+              .attachments ??
+          [],
     );
   }
 

@@ -40,8 +40,12 @@ class Data {
   final String contactPerson;
   final String? profileImage;
   final bool isActive;
+
+  final bool? isOnline;
+  final DateTime? lastOnlineAt;
   final bool isRejected;
   final bool isVerified;
+
   final List<String> attachments;
   final PendingUpdates pendingUpdates;
 
@@ -49,7 +53,7 @@ class Data {
     required this.id,
     required this.authId,
     required this.companyName,
-     this.profileImage,
+    this.profileImage,
     required this.website,
     required this.serviceCategories,
     required this.latitude,
@@ -62,6 +66,8 @@ class Data {
     required this.isVerified,
     required this.attachments,
     required this.pendingUpdates,
+    this.isOnline,
+    this.lastOnlineAt,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -79,12 +85,12 @@ class Data {
     profileImage: json["profile_image"] ?? '',
     contactPerson: json["contactPerson"],
     isActive: json["isActive"],
+    isOnline: _toBool(json["isOnline"]),
+    lastOnlineAt: _toDate(json["lastOnlineAt"]),
     isRejected: json["isRejected"],
     isVerified: json["isVerified"],
     attachments: List<String>.from(json["attachments"].map((x) => x)),
-    pendingUpdates: PendingUpdates.fromJson(
-      json["pendingUpdates"] ?? {},
-    ),
+    pendingUpdates: PendingUpdates.fromJson(json["pendingUpdates"] ?? {}),
   );
 
   Map<String, dynamic> toJson() => {
@@ -106,6 +112,24 @@ class Data {
     "attachments": List<dynamic>.from(attachments.map((x) => x)),
     "pendingUpdates": pendingUpdates.toJson(),
   };
+}
+
+int _toInt(dynamic v) {
+  if (v == null) return 0;
+  if (v is num) return v.toInt();
+  return int.tryParse(v.toString()) ?? 0;
+}
+
+bool? _toBool(dynamic v) {
+  if (v == null) return null;
+  if (v is bool) return v;
+  if (v is num) return v == 1;
+  return v.toString().toLowerCase() == "true";
+}
+
+DateTime? _toDate(dynamic v) {
+  if (v == null) return null;
+  return DateTime.tryParse(v.toString());
 }
 
 class AuthId {

@@ -4,8 +4,10 @@ class ApiEndPoints {
   static final baseUrl = '$mainDomain/';
 
   //GOOGLE MAP API KEY
-  static const String googleApiKeyAndroid ="AIzaSyAXGE6m2DSrdc-F21kQXMdwfni5KZNsCLI";
-  static const String googleApiKeyIos = "AIzaSyAXGE6m2DSrdc-F21kQXMdwfni5KZNsCLI";
+  static const String googleApiKeyAndroid =
+      "AIzaSyAXGE6m2DSrdc-F21kQXMdwfni5KZNsCLI";
+  static const String googleApiKeyIos =
+      "AIzaSyAXGE6m2DSrdc-F21kQXMdwfni5KZNsCLI";
 
   /// API End Points
   // Auth

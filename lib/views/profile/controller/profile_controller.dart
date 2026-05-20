@@ -53,6 +53,12 @@ class ProfileController extends GetxController {
         isLoading: isLoading,
         onSuccess: (result) {
           providerProfileModel.value = result;
+
+          final serverValue = result.data.isOnline;
+
+          if (serverValue != null) {
+            isOnline.value = serverValue;
+          }
         },
       );
     } catch (e) {
@@ -84,6 +90,13 @@ class ProfileController extends GetxController {
         showSuccessSnackBar: false,
 
         onSuccess: (response) {
+          final serverValue = response.data?.isOnline;
+
+          // ✅ sync local state with server (source of truth)
+          if (serverValue != null) {
+            isOnline.value = serverValue;
+          }
+
           SuccessDialog.show(
             title: "Success",
             subtitle: response.message ?? '',

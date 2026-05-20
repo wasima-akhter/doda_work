@@ -104,9 +104,11 @@ class ProfileScreenMobile extends GetView<ProfileController> {
                                   fontWeight: FontWeight.w500,
                                 ),
 
-                                OnlineStatus(
-                                  initialValue: controller.isOnline.value,
-                                  onChanged: controller.toggleOnlineStatus,
+                                Obx(
+                                  () => OnlineStatus(
+                                    initialValue: controller.isOnline.value,
+                                    onChanged: controller.toggleOnlineStatus,
+                                  ),
                                 ),
                               ],
                             ),

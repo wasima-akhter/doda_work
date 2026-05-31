@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:doda_work/core/helpers/full_screen_gallery_viewer.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../core/utils/basic_import.dart';
@@ -227,6 +228,8 @@ class InboxScreenMobile extends GetView<InboxController> {
                         final messageType = msg["type"] ?? "text";
                         final isUploading = msg["isUploading"] ?? false;
 
+                        debugPrint("time of inbox: ${msg["formattedTime"]}");
+
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8),
                           child: Row(
@@ -238,6 +241,7 @@ class InboxScreenMobile extends GetView<InboxController> {
                               if (!isMe) ...[
                                 ProfileAvatarWidget(
                                   size: 40.r,
+                                  enablePreview: true,
                                   imageUrl:
                                       '${ApiEndPoints.mainDomain}/${controller.avatar}',
                                 ),
@@ -610,214 +614,129 @@ class InboxScreenMobile extends GetView<InboxController> {
     final imageCount = images.length;
     final maxWidth = width * 0.7;
 
-    if (imageCount == 1) {
-      // Single image - optimized size
+    Widget buildItem(int index, {double? height, bool isSingle = false}) {
       return _buildSingleImage(
-        images[0],
+        images[index],
         maxWidth,
         isUploading,
         isMe,
-        isSingle: true,
+        height: height,
+        isSingle: isSingle,
+        images: images,
+        initialIndex: index,
       );
-    } else if (imageCount == 2) {
+    }
+
+    if (imageCount == 1) {
+      return buildItem(0, isSingle: true);
+    }
+
+    if (imageCount == 2) {
       return SizedBox(
         width: maxWidth,
         child: Row(
           children: [
-            Expanded(
-              child: _buildSingleImage(
-                images[0],
-                maxWidth / 2,
-                isUploading,
-                isMe,
-              ),
-            ),
+            Expanded(child: buildItem(0)),
             const SizedBox(width: 3),
-            Expanded(
-              child: _buildSingleImage(
-                images[1],
-                maxWidth / 2,
-                isUploading,
-                isMe,
-              ),
-            ),
+            Expanded(child: buildItem(1)),
           ],
         ),
       );
-    } else if (imageCount == 3) {
+    }
+
+    if (imageCount == 3) {
       return SizedBox(
         width: maxWidth,
         child: Column(
           children: [
-            _buildSingleImage(
-              images[0],
-              maxWidth,
-              isUploading,
-              isMe,
-              height: 200,
-            ),
+            buildItem(0, height: 200),
             const SizedBox(height: 3),
             Row(
               children: [
-                Expanded(
-                  child: _buildSingleImage(
-                    images[1],
-                    maxWidth / 2,
-                    isUploading,
-                    isMe,
-                    height: 120,
-                  ),
-                ),
+                Expanded(child: buildItem(1, height: 120)),
                 const SizedBox(width: 3),
-                Expanded(
-                  child: _buildSingleImage(
-                    images[2],
-                    maxWidth / 2,
-                    isUploading,
-                    isMe,
-                    height: 120,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    } else if (imageCount == 4) {
-      return SizedBox(
-        width: maxWidth,
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: _buildSingleImage(
-                    images[0],
-                    maxWidth / 2,
-                    isUploading,
-                    isMe,
-                    height: 140,
-                  ),
-                ),
-                const SizedBox(width: 3),
-                Expanded(
-                  child: _buildSingleImage(
-                    images[1],
-                    maxWidth / 2,
-                    isUploading,
-                    isMe,
-                    height: 140,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 3),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildSingleImage(
-                    images[2],
-                    maxWidth / 2,
-                    isUploading,
-                    isMe,
-                    height: 140,
-                  ),
-                ),
-                const SizedBox(width: 3),
-                Expanded(
-                  child: _buildSingleImage(
-                    images[3],
-                    maxWidth / 2,
-                    isUploading,
-                    isMe,
-                    height: 140,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    } else {
-      return SizedBox(
-        width: maxWidth,
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: _buildSingleImage(
-                    images[0],
-                    maxWidth / 2,
-                    isUploading,
-                    isMe,
-                    height: 140,
-                  ),
-                ),
-                const SizedBox(width: 3),
-                Expanded(
-                  child: _buildSingleImage(
-                    images[1],
-                    maxWidth / 2,
-                    isUploading,
-                    isMe,
-                    height: 140,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 3),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildSingleImage(
-                    images[2],
-                    maxWidth / 2,
-                    isUploading,
-                    isMe,
-                    height: 140,
-                  ),
-                ),
-                const SizedBox(width: 3),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      _buildSingleImage(
-                        images[3],
-                        maxWidth / 2,
-                        isUploading,
-                        isMe,
-                        height: 140,
-                      ),
-                      // +N Overlay
-                      Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.65),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '+${imageCount - 4}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                Expanded(child: buildItem(2, height: 120)),
               ],
             ),
           ],
         ),
       );
     }
+
+    if (imageCount == 4) {
+      return SizedBox(
+        width: maxWidth,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(child: buildItem(0, height: 140)),
+                const SizedBox(width: 3),
+                Expanded(child: buildItem(1, height: 140)),
+              ],
+            ),
+            const SizedBox(height: 3),
+            Row(
+              children: [
+                Expanded(child: buildItem(2, height: 140)),
+                const SizedBox(width: 3),
+                Expanded(child: buildItem(3, height: 140)),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    // 5+ images
+    return SizedBox(
+      width: maxWidth,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(child: buildItem(0, height: 140)),
+              const SizedBox(width: 3),
+              Expanded(child: buildItem(1, height: 140)),
+            ],
+          ),
+          const SizedBox(height: 3),
+          Row(
+            children: [
+              Expanded(child: buildItem(2, height: 140)),
+              const SizedBox(width: 3),
+              Expanded(
+                child: Stack(
+                  children: [
+                    buildItem(3, height: 140),
+
+                    // +N overlay
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.65),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '+${imageCount - 4}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildSingleImage(
@@ -827,6 +746,8 @@ class InboxScreenMobile extends GetView<InboxController> {
     bool isMe, {
     double? height,
     bool isSingle = false,
+    required List images,
+    required int initialIndex,
   }) {
     final cleanPath = imagePath
         .replaceAll('\\', '/')
@@ -900,23 +821,38 @@ class InboxScreenMobile extends GetView<InboxController> {
     return Stack(
       children: [
         // ✅ For single image, add constraints container
-        isSingle
-            ? ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: width * 0.85, // Max 85% of message width
-                  maxHeight: 400, // Max height to prevent too tall images
-                  minWidth: 200, // Min width for very small images
-                  minHeight: 150, // Min height
-                ),
-                child: ClipRRect(
+        GestureDetector(
+          onTap: isUploading
+              ? null
+              : () {
+                  Navigator.push(
+                    Get.context!,
+                    MaterialPageRoute(
+                      builder: (_) => FullScreenGalleryViewer(
+                        images: images,
+                        initialIndex: initialIndex,
+                      ),
+                    ),
+                  );
+                },
+          child: isSingle
+              ? ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: width * 0.85, // Max 85% of message width
+                    maxHeight: 400, // Max height to prevent too tall images
+                    minWidth: 200, // Min width for very small images
+                    minHeight: 150, // Min height
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: imageWidget,
+                  ),
+                )
+              : ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: imageWidget,
                 ),
-              )
-            : ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: imageWidget,
-              ),
+        ),
         // Uploading overlay
         if (isUploading)
           Positioned.fill(

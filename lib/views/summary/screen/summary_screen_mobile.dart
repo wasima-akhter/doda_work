@@ -23,6 +23,9 @@ class SummaryScreenMobile extends GetView<SummaryController> {
               priority: model.priority ?? "",
               customerName: model.customerName ?? "",
               address: model.address ?? "",
+              email: model.customerEmail ?? '',
+              phone: model.customerPhone ?? '',
+              username: '--' ?? '',
             ),
             Space.height.v20,
             if (model.isUser)

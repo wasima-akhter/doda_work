@@ -70,6 +70,8 @@ class HomeScreenMobile extends GetView<HomeController> {
                                         arguments: SummaryModel(
                                           isUser: true,
                                           requestId: item.requestId,
+                                          customerEmail: item.customerId?.email,
+
                                           categoryIcon:
                                               item.serviceCategory?.icon,
                                           categoryName:

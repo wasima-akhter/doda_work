@@ -1,10 +1,10 @@
-import 'package:doda_work/core/utils/dimensions.dart'; // Ensure this import is correct
-import 'package:doda_work/core/utils/extensions.dart';
 import 'package:doda_work/views/terms/controller/terms_controller.dart'; // Ensure the correct path is used
 import 'package:doda_work/widgets/auth_app_bar.dart';
+import 'package:doda_work/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+
+import '../../../core/helpers/simple_webview_widget.dart';
 
 class TermsScreenMobile extends GetView<TermsController> {
   const TermsScreenMobile({super.key});
@@ -17,10 +17,15 @@ class TermsScreenMobile extends GetView<TermsController> {
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading.value) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingWidget());
           }
 
           if (controller.termsData.value.data?.description != null) {
+            final description =
+                controller.termsData.value.data?.description ?? "";
+            return SimpleWebViewWidget(htmlContent: description);
+
+            /*
             return ListView(
               padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
               children: [
@@ -51,6 +56,8 @@ class TermsScreenMobile extends GetView<TermsController> {
                 ),
               ],
             );
+
+         */
           }
 
           return Center(child: Text('No terms available.'));

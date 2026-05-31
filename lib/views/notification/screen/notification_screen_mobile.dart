@@ -16,6 +16,13 @@ class NotificationScreenMobile extends GetView<NotificationController> {
           pagingController: controller.pagingController,
           builderDelegate: PagedChildBuilderDelegate<NotificationItem>(
             itemBuilder: (context, notification, index) {
+              final dateTime = (notification.createdAt ?? DateTime.now())
+                  .toLocal();
+
+              final isToday =
+                  dateTime.year == DateTime.now().year &&
+                  dateTime.month == DateTime.now().month &&
+                  dateTime.day == DateTime.now().day;
               return Container(
                 margin: EdgeInsets.only(top: 8),
                 padding: EdgeInsets.all(8),
@@ -33,6 +40,7 @@ class NotificationScreenMobile extends GetView<NotificationController> {
                   ],
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 6,
                   children: [
                     Row(
@@ -48,11 +56,19 @@ class NotificationScreenMobile extends GetView<NotificationController> {
                             textOverflow: TextOverflow.ellipsis,
                           ),
                         ),
+
+                        // TextWidget(
+                        //   DateFormat('hh:mm a').format(
+                        //     (notification.createdAt ?? DateTime.now())
+                        //         .toLocal(),
+                        //   ),
+                        //   fontSize: Dimensions.titleSmall * 0.8,
+                        //   fontWeight: FontWeight.w600,
+                        // ),
                         TextWidget(
-                          DateFormat('hh:mm a').format(
-                            (notification.createdAt ?? DateTime.now())
-                                .toLocal(),
-                          ),
+                          isToday
+                              ? DateFormat('hh:mm a').format(dateTime)
+                              : DateFormat('dd MMM yyyy').format(dateTime),
                           fontSize: Dimensions.titleSmall * 0.8,
                           fontWeight: FontWeight.w600,
                         ),

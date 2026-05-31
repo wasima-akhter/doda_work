@@ -5,15 +5,28 @@ class PrivacyScreenMobile extends GetView<PrivacyController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AuthAppBar(title: 'Privacy Policy'),
-      body: SafeArea(
-        child: Obx(() {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AuthAppBar(title: 'Privacy Policy'),
+        body: Obx(() {
           if (controller.isLoading.value) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingWidget());
           }
 
           if (controller.privacyData.value.data?.description != null) {
+            final description =
+                controller.privacyData.value.data?.description ?? "";
+            return SimpleWebViewWidget(htmlContent: description);
+          }
+
+          return Center(child: Text('No terms available.'));
+        }),
+      ),
+    );
+  }
+}
+
+/*
             return ListView(
               padding: Dimensions.defaultHorizontalSize.edgeHorizontal,
               children: [
@@ -44,11 +57,5 @@ class PrivacyScreenMobile extends GetView<PrivacyController> {
                 ),
               ],
             );
-          }
 
-          return Center(child: Text('No terms available.'));
-        }),
-      ),
-    );
-  }
-}
+        */

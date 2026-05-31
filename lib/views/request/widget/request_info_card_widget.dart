@@ -43,15 +43,15 @@ class RequestPreviewWidget extends StatelessWidget {
           _buildInfoRow("Priority", controller.selectedPriority.value),
           _buildInfoRow("Description", description),
           _buildInfoRow("Phone", phone),
-          
+
           const Divider(height: 30),
-          
+
           _buildSectionTitle("Logistics"),
           _buildInfoRow("Date", _formatDateRange()),
           _buildInfoRow("Address", controller.selectedAddress.value),
-          
+
           const Divider(height: 30),
-          
+
           _buildSectionTitle("Attachments"),
           _buildPhotoPreview(),
         ],
@@ -100,7 +100,8 @@ class RequestPreviewWidget extends StatelessWidget {
   }
 
   String _formatDateRange() {
-    if (controller.startDateTime.value == null || controller.endDateTime.value == null) {
+    if (controller.startDateTime.value == null ||
+        controller.endDateTime.value == null) {
       return "N/A";
     }
     final df = DateFormat('MMM dd, yyyy HH:mm');
@@ -141,6 +142,9 @@ class RequestInfoCard extends StatelessWidget {
   final String priority;
   final String customerName;
   final String address;
+  final String phone;
+  final String email;
+  final String username;
 
   const RequestInfoCard({
     super.key,
@@ -150,6 +154,9 @@ class RequestInfoCard extends StatelessWidget {
     required this.priority,
     required this.customerName,
     required this.address,
+    required this.phone,
+    required this.email,
+    required this.username,
   });
 
   @override
@@ -179,6 +186,9 @@ class RequestInfoCard extends StatelessWidget {
           _buildLabelValue('Subcategory', subcategory),
           _buildLabelValue('Priority', priority),
           _buildLabelValue('Customer Name', customerName),
+          _buildLabelValue('Email', email),
+          _buildLabelValue('Phone', phone),
+          _buildLabelValue('Username', username),
           _buildLabelValue('Address', address),
         ],
       ),
@@ -187,7 +197,7 @@ class RequestInfoCard extends StatelessWidget {
 
   Widget _buildLabelValue(String label, String value) {
     return Padding(
-      padding:  EdgeInsets.symmetric(vertical: Dimensions.verticalSize * 0.1),
+      padding: EdgeInsets.symmetric(vertical: Dimensions.verticalSize * 0.1),
       child: RichText(
         text: TextSpan(
           children: [

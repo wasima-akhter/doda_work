@@ -2,6 +2,7 @@ import 'package:doda_work/core/utils/app_storage.dart';
 import 'package:doda_work/core/utils/basic_import.dart';
 import 'package:doda_work/core/utils/extensions.dart';
 import 'package:doda_work/widgets/auth_app_bar.dart';
+import '../../../core/helpers/full_screen_image_viewer.dart';
 import '../../home/model/home_model.dart';
 import '../../request/screen/request_screen.dart';
 import '../controller/summary_controller.dart';

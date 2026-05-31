@@ -5,6 +5,7 @@ class SummaryModel {
   final String? id;
   final String? customerName;
   final String? customerPhone;
+  final String? customerEmail;
   final String? categoryName;
   final String? categoryIcon;
   final String? subcategory;
@@ -54,7 +55,9 @@ class SummaryModel {
     this.potentialProviders,
     this.createdAt,
     this.updatedAt,
-    this.requestId, this.providerNotes,
+    this.requestId,
+    this.providerNotes,
     this.completedById,
+    this.customerEmail,
   });
 }

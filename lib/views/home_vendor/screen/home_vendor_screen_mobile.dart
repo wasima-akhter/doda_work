@@ -239,6 +239,7 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
         requestId: item.requestId,
         categoryIcon: item.serviceCategory?.icon,
         categoryName: item.serviceCategory?.name,
+        customerEmail: item.customerId?.email,
         customerPhone: item.customerPhone,
         customerName: item.customerId?.name,
         priority: item.priority,

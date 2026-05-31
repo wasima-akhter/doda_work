@@ -1,14 +1,18 @@
 import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/helpers/full_screen_image_viewer.dart';
+
 class ProfileAvatarWidget extends StatelessWidget {
   final String? imageUrl;
-  final File? imageFile; // Local file support
-  final double size; // Diameter of circle
+  final File? imageFile;
+  final double size;
   final bool hasBorder;
   final Color? borderColor;
   final double borderWidth;
+  final bool enablePreview;
 
   const ProfileAvatarWidget({
     super.key,
@@ -18,6 +22,7 @@ class ProfileAvatarWidget extends StatelessWidget {
     this.hasBorder = false,
     this.borderColor,
     this.borderWidth = 2,
+    this.enablePreview = false,
   });
 
   @override
@@ -25,7 +30,6 @@ class ProfileAvatarWidget extends StatelessWidget {
     Widget imageWidget;
 
     if (imageFile != null) {
-      // Local file image
       imageWidget = Image.file(
         imageFile!,
         width: size,
@@ -33,7 +37,6 @@ class ProfileAvatarWidget extends StatelessWidget {
         fit: BoxFit.cover,
       );
     } else if (imageUrl != null && imageUrl!.isNotEmpty) {
-      // Network image
       imageWidget = CachedNetworkImage(
         imageUrl: imageUrl!,
         width: size,
@@ -58,7 +61,6 @@ class ProfileAvatarWidget extends StatelessWidget {
         ),
       );
     } else {
-      // Default placeholder
       imageWidget = Container(
         width: size,
         height: size,
@@ -70,20 +72,35 @@ class ProfileAvatarWidget extends StatelessWidget {
       );
     }
 
-    return Container(
+    final avatar = Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: hasBorder
-            ? Border.all(
-          color: borderColor ?? Colors.blue,
-          width: borderWidth,
-        )
+            ? Border.all(color: borderColor ?? Colors.blue, width: borderWidth)
             : null,
       ),
       clipBehavior: Clip.hardEdge,
       child: imageWidget,
+    );
+
+    if (!enablePreview ||
+        (imageFile == null && (imageUrl == null || imageUrl!.isEmpty))) {
+      return avatar;
+    }
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                FullScreenImageViewer(imageUrl: imageUrl, imageFile: imageFile),
+          ),
+        );
+      },
+      child: avatar,
     );
   }
 }

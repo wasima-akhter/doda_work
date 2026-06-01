@@ -372,12 +372,18 @@ class AditionalScreenMobile extends GetView<AditionalController> {
           ),
         ),
         Space.height.v10,
-        TextButton(
-          onPressed: () => controller.currentStep.value = 0,
-          child: TextWidget(
-            "Back to Edit",
-            color: CustomColors.grayShade,
-            fontWeight: FontWeight.w500,
+        Obx(
+          () => TextButton(
+            onPressed: () => controller.providerRegIsLoading.value
+                ? null
+                : controller.currentStep.value = 0,
+            child: TextWidget(
+              "Back to Edit",
+              color: controller.providerRegIsLoading.value
+                  ? CustomColors.grayShade.withValues(alpha: 0.5)
+                  : CustomColors.grayShade,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         Space.height.v20,

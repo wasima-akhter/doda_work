@@ -36,7 +36,25 @@ class HomeVendorController extends GetxController {
   @override
   void onInit() {
     _initializePagingControllers();
-    fetch("PENDING", 1);
+    // ❌ Remove: fetch("PENDING", 1);  ← don't fetch eagerly here
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = Get.arguments;
+      if (args is Map && args['initialVendorTab'] != null) {
+        final targetTab = args['initialVendorTab'] as String;
+        final index = statusTypes.indexOf(targetTab);
+        if (index != -1) {
+          selectedStatus.value = index;
+          // ✅ Only refresh the target tab's paging controller —
+          //    the listener will call fetch(targetTab, 1) automatically
+          pagingControllers[targetTab]!.refresh();
+        }
+      } else {
+        // ✅ Normal launch — fetch PENDING as before
+        fetch("PENDING", 1);
+      }
+    });
+
     super.onInit();
   }
 

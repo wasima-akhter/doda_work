@@ -13,7 +13,15 @@ class CongratulationsScreenMobile extends GetView<CongratulationsController> {
           vertical: Dimensions.verticalSize * 2,
         ),
         title: 'Go To Home',
-        onPressed: () => Get.offAllNamed(Routes.navigationScreen),
+        // onPressed: () {
+        //   Get.offAllNamed(Routes.navigationScreen);
+        // },
+        onPressed: () {
+          Get.offAllNamed(
+            Routes.navigationScreen,
+            arguments: {'initialVendorTab': 'ACCEPTED'}, // ✅
+          );
+        },
       ),
       body: SafeArea(
         child: Padding(

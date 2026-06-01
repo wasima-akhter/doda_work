@@ -7,7 +7,11 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: HomeVendorController.statusTypes.length,
-      child: Scaffold(appBar: _buildAppBar(), body: _buildBody()),
+      child: _TabSyncWrapper(
+        // ✅ new wrapper
+        controller: controller,
+        child: Scaffold(appBar: _buildAppBar(), body: _buildBody()),
+      ),
     );
   }
 
@@ -85,14 +89,25 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
     );
   }
 
+  // void _onTabChanged(int value) {
+  //   controller.selectedStatus.value = value;
+
+  //   final status = HomeVendorController.statusTypes[value];
+  //   final pagingController = controller.pagingControllers[status]!;
+
+  //   pagingController.refresh(); // 🔥 FORCE REFRESH EVERY TIME
+  //   // controller.fetch(status, 1); // 🔥 ENSURE FIRST LOAD
+  // }
   void _onTabChanged(int value) {
     controller.selectedStatus.value = value;
 
     final status = HomeVendorController.statusTypes[value];
     final pagingController = controller.pagingControllers[status]!;
 
-    pagingController.refresh(); // 🔥 FORCE REFRESH EVERY TIME
-    // controller.fetch(status, 1); // 🔥 ENSURE FIRST LOAD
+    // ✅ Only refresh if no data loaded yet — don't wipe data on programmatic tab switch
+    if (pagingController.itemList?.isEmpty ?? true) {
+      pagingController.refresh();
+    }
   }
 
   Widget _buildTabItem(HomeVendorController controller, int index) {
@@ -422,4 +437,40 @@ class StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(covariant StickyHeaderDelegate oldDelegate) {
     return oldDelegate.height != height || oldDelegate.child != child;
   }
+}
+
+//
+class _TabSyncWrapper extends StatefulWidget {
+  final HomeVendorController controller;
+  final Widget child;
+  const _TabSyncWrapper({required this.controller, required this.child});
+
+  @override
+  State<_TabSyncWrapper> createState() => _TabSyncWrapperState();
+}
+
+class _TabSyncWrapperState extends State<_TabSyncWrapper> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final tabController = DefaultTabController.of(context);
+
+      // ✅ Sync the CURRENT value immediately (ever() misses already-set values)
+      final currentIndex = widget.controller.selectedStatus.value;
+      if (tabController.index != currentIndex) {
+        tabController.animateTo(currentIndex);
+      }
+
+      // ✅ Then watch future changes
+      ever(widget.controller.selectedStatus, (index) {
+        if (tabController.index != index) {
+          tabController.animateTo(index);
+        }
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

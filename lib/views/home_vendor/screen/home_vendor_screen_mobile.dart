@@ -105,9 +105,9 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
     final pagingController = controller.pagingControllers[status]!;
 
     // ✅ Only refresh if no data loaded yet — don't wipe data on programmatic tab switch
-    if (pagingController.itemList?.isEmpty ?? true) {
-      pagingController.refresh();
-    }
+    // if (pagingController.itemList?.isEmpty ?? true) {
+    pagingController.refresh();
+    // }
   }
 
   Widget _buildTabItem(HomeVendorController controller, int index) {

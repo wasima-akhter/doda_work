@@ -92,7 +92,7 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
     final pagingController = controller.pagingControllers[status]!;
 
     pagingController.refresh(); // 🔥 FORCE REFRESH EVERY TIME
-    controller.fetch(status, 1); // 🔥 ENSURE FIRST LOAD
+    // controller.fetch(status, 1); // 🔥 ENSURE FIRST LOAD
   }
 
   Widget _buildTabItem(HomeVendorController controller, int index) {
@@ -133,6 +133,8 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
     return RefreshIndicator(
       onRefresh: () => _refreshStatusList(status),
       child: PagedListView<int, HomeServiceItem>(
+        primary: false,
+        physics: const ClampingScrollPhysics(),
         pagingController: controller.pagingControllers[status]!,
         builderDelegate: PagedChildBuilderDelegate<HomeServiceItem>(
           firstPageProgressIndicatorBuilder: (_) => _buildLoadingIndicator(),

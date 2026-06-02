@@ -188,7 +188,6 @@ class RequestInfoCard extends StatelessWidget {
           _buildLabelValue('Customer Name', customerName),
           _buildLabelValue('Email', email),
           _buildLabelValue('Phone', phone),
-          _buildLabelValue('Username', username),
           _buildLabelValue('Address', address),
         ],
       ),

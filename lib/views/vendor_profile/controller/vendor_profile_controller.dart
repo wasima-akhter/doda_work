@@ -8,10 +8,14 @@ import '../../../core/api/services/api.dart';
 import '../../../core/utils/app_storage.dart';
 import '../../../core/utils/basic_import.dart';
 import '../../../routes/routes.dart';
+import '../../../widgets/success_dialog.dart';
 import '../../aditional/model/service_category_model.dart';
 import '../model/provider_update_profile_model.dart';
 
 class VendorProfileController extends GetxController {
+  static VendorProfileController get to => Get.find<VendorProfileController>();
+  //
+
   final nameController = TextEditingController();
   final contactPersonController = TextEditingController();
   final coveredRadius = TextEditingController();
@@ -194,6 +198,32 @@ class VendorProfileController extends GetxController {
     }
   }
 
+  void _handleSuccessResponse(ProviderUpdateProfileModel response) {
+    debugPrint('🎉 Success Response:');
+    debugPrint('   Status Code: ${response.statusCode}');
+    debugPrint('   Success: ${response.success}');
+    debugPrint('   Message: ${response.message}');
+    debugPrint('   Data Message: ${response.data.message}');
+    //
+    Get.close(1);
+
+    //
+    // _showSnackBar(response.message.capitalizeFirst ?? '', isError: false);
+    // make a popup
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+      SuccessDialog.show(
+        title: "Request Submitted",
+        subtitle:
+            "Your update request has been submitted successfully and is awaiting admin approval.",
+        onTap: () => Get.back(),
+      );
+    });
+
+    // fetch profile info again.
+    // Get.find<ProfileController>().getProviderProfile();
+  }
+
   String? _getAuthToken() {
     final token = AppStorage.token;
     if (token.isEmpty) {
@@ -208,6 +238,50 @@ class VendorProfileController extends GetxController {
     return AppStorage.isVendor;
   }
 
+  final RxList<WorkingHour> workingHours = <WorkingHour>[
+    WorkingHour(
+      day: "Monday",
+      startTime: "09:00",
+      endTime: "18:00",
+      isAvailable: true,
+    ),
+    WorkingHour(
+      day: "Tuesday",
+      startTime: "09:00",
+      endTime: "18:00",
+      isAvailable: true,
+    ),
+    WorkingHour(
+      day: "Wednesday",
+      startTime: "09:00",
+      endTime: "18:00",
+      isAvailable: true,
+    ),
+    WorkingHour(
+      day: "Thursday",
+      startTime: "09:00",
+      endTime: "18:00",
+      isAvailable: true,
+    ),
+    WorkingHour(
+      day: "Friday",
+      startTime: "09:00",
+      endTime: "18:00",
+      isAvailable: true,
+    ),
+    WorkingHour(
+      day: "Saturday",
+      startTime: "09:00",
+      endTime: "18:00",
+      isAvailable: false,
+    ),
+    WorkingHour(
+      day: "Sunday",
+      startTime: "09:00",
+      endTime: "18:00",
+      isAvailable: false,
+    ),
+  ].obs;
   Map<String, dynamic> _prepareRequestBody() {
     return {
       'companyName': nameController.text.trim(),
@@ -218,6 +292,8 @@ class VendorProfileController extends GetxController {
       "longitude": selectedLatLng.value!.longitude.toString(),
       "serviceCategories": selectedServiceList,
       "serviceLocation": selectedAddress.value,
+      // new
+      "workingHours": workingHours.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -227,16 +303,6 @@ class VendorProfileController extends GetxController {
       fileMap['profile_image'] = selectedImg.value;
     }
     return fileMap;
-  }
-
-  void _handleSuccessResponse(ProviderUpdateProfileModel response) {
-    debugPrint('🎉 Success Response:');
-    debugPrint('   Status Code: ${response.statusCode}');
-    debugPrint('   Success: ${response.success}');
-    debugPrint('   Message: ${response.message}');
-    debugPrint('   Data Message: ${response.data.message}');
-
-    Get.close(1);
   }
 
   void _handleError(dynamic error) {
@@ -287,4 +353,25 @@ class VendorProfileController extends GetxController {
         selectedLatLng.value != null &&
         selectedServiceList.isNotEmpty;
   }
+}
+
+class WorkingHour {
+  String day;
+  String startTime;
+  String endTime;
+  bool isAvailable;
+
+  WorkingHour({
+    required this.day,
+    required this.startTime,
+    required this.endTime,
+    required this.isAvailable,
+  });
+
+  Map<String, dynamic> toJson() => {
+    "day": day,
+    "startTime": startTime,
+    "endTime": endTime,
+    "isAvailable": isAvailable,
+  };
 }

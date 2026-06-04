@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:doda_work/core/helpers/helpers.dart';
 import 'package:doda_work/views/profile/controller/profile_controller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -233,6 +234,13 @@ class VendorProfileScreenMobile extends GetView<VendorProfileController> {
                     Space.height.betweenInputBox,
                     Space.height.betweenInputBox,
 
+                    // working hours //
+                    WorkingHoursSection(controller: controller),
+
+                    //
+                    Space.height.betweenInputBox,
+                    Space.height.betweenInputBox,
+
                     Obx(
                       () => PrimaryButtonWidget(
                         isLoading: controller.isLoading.value,
@@ -247,6 +255,161 @@ class VendorProfileScreenMobile extends GetView<VendorProfileController> {
                 ),
         ),
       ),
+    );
+  }
+}
+
+class WorkingHoursSection extends StatelessWidget {
+  final VendorProfileController controller;
+
+  const WorkingHoursSection({super.key, required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextWidget(
+          "Working Hours",
+          fontSize: Dimensions.titleMedium,
+          fontWeight: FontWeight.w600,
+        ),
+
+        Space.height.v10,
+
+        Obx(
+          () => Column(
+            children: List.generate(controller.workingHours.length, (index) {
+              final item = controller.workingHours[index];
+
+              return WorkingHoursDayTimeBar(item: item);
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class WorkingHoursDayTimeBar extends StatelessWidget {
+  final WorkingHour item;
+
+  const WorkingHoursDayTimeBar({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = VendorProfileController.to;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(color: CustomColors.disableColor),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextWidget(item.day, fontWeight: FontWeight.w600),
+              ),
+
+              WorkingHoursSwitch(item: item),
+            ],
+          ),
+
+          if (item.isAvailable) ...[
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () async {
+                      final initial = item.startTime.isNotEmpty
+                          ? parsePickedTime(item.startTime)
+                          : const TimeOfDay(hour: 9, minute: 0);
+
+                      final picked = await pickAppTime(context, initial);
+
+                      if (picked != null) {
+                        item.startTime =
+                            "${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}";
+                        controller.workingHours.refresh();
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(formatTime(item.startTime)),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                Expanded(
+                  child: InkWell(
+                    onTap: () async {
+                      final initial = item.endTime.isNotEmpty
+                          ? parsePickedTime(item.endTime)
+                          : const TimeOfDay(hour: 9, minute: 0);
+
+                      final picked = await pickAppTime(context, initial);
+
+                      if (picked != null) {
+                        item.endTime =
+                            "${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}";
+
+                        controller.workingHours.refresh();
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(formatTime(item.endTime)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class WorkingHoursSwitch extends StatelessWidget {
+  final WorkingHour item; // replace with your model type
+  const WorkingHoursSwitch({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = VendorProfileController.to;
+
+    return Switch(
+      trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
+      trackOutlineWidth: const WidgetStatePropertyAll(0),
+
+      activeTrackColor: CustomColors.primary,
+      inactiveTrackColor: Colors.grey.shade300,
+
+      activeThumbColor: CustomColors.whiteColor,
+      inactiveThumbColor: CustomColors.whiteColor,
+
+      thumbColor: WidgetStatePropertyAll(CustomColors.whiteColor),
+
+      value: item.isAvailable,
+
+      onChanged: (value) {
+        item.isAvailable = value;
+        controller.workingHours.refresh();
+      },
     );
   }
 }

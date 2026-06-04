@@ -8,7 +8,7 @@ class CustomSnackBar {
   }) {
     Get.showSnackbar(
       GetSnackBar(
-        backgroundColor: CustomColors.primary.withAlpha(65),
+        backgroundColor: CustomColors.primary.withValues(alpha: 0.7),
         duration: const Duration(seconds: 3),
         margin: EdgeInsets.symmetric(
           horizontal: Dimensions.defaultHorizontalSize * 0.7,

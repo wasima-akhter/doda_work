@@ -4,9 +4,11 @@ import 'package:doda_work/core/utils/basic_import.dart';
 import 'package:doda_work/views/profile/model/user_profile_model.dart';
 
 import '../../../widgets/success_dialog.dart';
+import '../../home_vendor/controller/home_vendor_controller.dart';
 import '../model/provider_model.dart';
 
 class ProfileController extends GetxController {
+  static ProfileController get to => Get.find<ProfileController>();
   RxBool isLoading = false.obs;
 
   final Rxn<UserProfileModel> userProfileModel = Rxn<UserProfileModel>();
@@ -104,6 +106,9 @@ class ProfileController extends GetxController {
               Get.back();
             },
           );
+
+          HomeVendorController.to.selectedStatus.value = 0;
+          HomeVendorController.to.fetch("PENDING", 1);
         },
       );
     } catch (e) {

@@ -55,6 +55,7 @@ class ProfileCardSectionWidgetView extends GetView<ProfileController> {
           fontWeight: FontWeight.w500,
           padding: Dimensions.heightSize.edgeTop,
         ),
+        10.verticalSpace,
 
         _buildSectionCard(
           Icons.menu_book_outlined,

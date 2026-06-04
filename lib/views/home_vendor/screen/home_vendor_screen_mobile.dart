@@ -325,6 +325,20 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
               color: CustomColors.grayShade,
             ),
           ),
+
+          20.verticalSpace,
+
+          if (status == 'PENDING' && !ProfileController.to.isOnline.value)
+            ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 280.w),
+              child: TextWidget(
+                "You're currently offline. Update your status to online from your Profile to receive new requests.",
+                textAlign: TextAlign.center,
+                fontWeight: FontWeight.w500,
+                fontSize: Dimensions.bodyMedium,
+                color: CustomColors.primary,
+              ),
+            ),
         ],
       ),
     );
@@ -450,25 +464,32 @@ class _TabSyncWrapper extends StatefulWidget {
 }
 
 class _TabSyncWrapperState extends State<_TabSyncWrapper> {
+  Worker? _worker;
+
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final tabController = DefaultTabController.of(context);
 
-      // ✅ Sync the CURRENT value immediately (ever() misses already-set values)
       final currentIndex = widget.controller.selectedStatus.value;
       if (tabController.index != currentIndex) {
         tabController.animateTo(currentIndex);
       }
 
-      // ✅ Then watch future changes
-      ever(widget.controller.selectedStatus, (index) {
-        if (tabController.index != index) {
+      _worker = ever(widget.controller.selectedStatus, (index) {
+        if (mounted && tabController.index != index) {
           tabController.animateTo(index);
         }
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _worker?.dispose();
+    super.dispose();
   }
 
   @override

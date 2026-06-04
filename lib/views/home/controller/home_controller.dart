@@ -1,9 +1,10 @@
 import 'package:doda_work/core/utils/app_storage.dart';
 import 'package:doda_work/views/home/model/home_model.dart';
+import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
 import '../../../core/utils/basic_import.dart';
 import '../model/request_model.dart';
-import 'package:http/http.dart' as http;
 
 class HomeController extends GetxController {
   // Currently selected status index
@@ -11,15 +12,15 @@ class HomeController extends GetxController {
 
   /// Paging controller for general request list
   final PagingController<int, RequestService> requestPagingController =
-  PagingController(firstPageKey: 1);
+      PagingController(firstPageKey: 1);
 
   /// Paging controllers for Home Services by status
   final Map<String, PagingController<int, HomeServiceItem>> pagingControllers =
-  {
-    "PENDING": PagingController(firstPageKey: 1),
-    "IN_PROGRESS": PagingController(firstPageKey: 1),
-    "COMPLETED": PagingController(firstPageKey: 1),
-  };
+      {
+        "PENDING": PagingController(firstPageKey: 1),
+        "IN_PROGRESS": PagingController(firstPageKey: 1),
+        "COMPLETED": PagingController(firstPageKey: 1),
+      };
 
   /// Loading state to prevent multiple API calls
   final Map<String, bool> isLoadingMap = {
@@ -52,11 +53,13 @@ class HomeController extends GetxController {
         List<HomeServiceItem> approvedItems = [];
 
         if (completedResponse.statusCode == 200) {
-          completedItems = HomeModel.fromJson(completedResponse.body).data?.requests ?? [];
+          completedItems =
+              HomeModel.fromJson(completedResponse.body).data?.requests ?? [];
         }
 
         if (approvedResponse.statusCode == 200) {
-          approvedItems = HomeModel.fromJson(approvedResponse.body).data?.requests ?? [];
+          approvedItems =
+              HomeModel.fromJson(approvedResponse.body).data?.requests ?? [];
         }
 
         // ✅ দুটি list merge করা হলো
@@ -74,7 +77,8 @@ class HomeController extends GetxController {
         );
 
         if (response.statusCode == 200) {
-          final newItems = HomeModel.fromJson(response.body).data?.requests ?? [];
+          final newItems =
+              HomeModel.fromJson(response.body).data?.requests ?? [];
 
           if (newItems.isEmpty) {
             controller.appendLastPage(newItems);

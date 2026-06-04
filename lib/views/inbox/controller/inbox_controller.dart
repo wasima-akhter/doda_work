@@ -232,6 +232,13 @@ class InboxController extends GetxController {
         debugPrint(
           '-----------------------------------------------------------------------',
         );
+
+        debugPrint(' result of old messages: $result ');
+        // debugPrint(
+        //   const JsonEncoder.withIndent(
+        //     '  ',
+        //   ).convert(AllConversationModel.toJson()),
+        // );
         debugPrint(result.blockStatus.isBlockedByYou.toString());
         debugPrint(result.blockStatus.isBlocked.toString());
 

@@ -93,12 +93,12 @@ class ProfileScreenMobile extends GetView<ProfileController> {
                             ],
                           ),
                           child: Padding(
-                            padding: Dimensions.paddingSize.edgeHorizontal,
+                            padding: Dimensions.paddingSize.edgeHorizontal / 2,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 TextWidget(
-                                  'Change Online Status',
+                                  'Online Status',
                                   color: CustomColors.blackColor,
                                   fontSize: Dimensions.titleSmall * 1.1,
                                   fontWeight: FontWeight.w500,
@@ -234,7 +234,7 @@ class _OnlineStatusState extends State<OnlineStatus> {
               width: 28,
               height: 24,
               decoration: BoxDecoration(
-                color: value ? Colors.white : CustomColors.primary,
+                color: value ? Colors.white : CustomColors.grayShade,
                 borderRadius: BorderRadius.circular(20),
               ),
             ),

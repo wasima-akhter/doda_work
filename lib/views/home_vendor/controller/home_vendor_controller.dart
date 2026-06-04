@@ -7,6 +7,7 @@ import '../../../widgets/web_payment_widget.dart';
 import '../model/provider_status_response_model.dart';
 
 class HomeVendorController extends GetxController {
+  static HomeVendorController get to => Get.find<HomeVendorController>();
   final RxInt selectedStatus = 0.obs;
   final RxBool isLoading = false.obs;
 

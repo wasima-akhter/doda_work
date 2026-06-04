@@ -1,7 +1,7 @@
 import 'package:doda_work/core/api/end_point/api_end_points.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../../core/api/services/api.dart';
 import '../../../core/utils/app_storage.dart';
@@ -32,6 +32,8 @@ class ChatController extends GetxController {
       );
 
       chatList.value = (result['chats'] as List<ChatModel>);
+
+      debugPrint('  chatList.value : ${chatList.value} ');
     } catch (e) {
       debugPrint('Error fetching chats: $e');
     } finally {
@@ -52,5 +54,4 @@ class ChatController extends GetxController {
   List<Participant> getAllParticipants(ChatModel chat) {
     return chat.participants;
   }
-
 }

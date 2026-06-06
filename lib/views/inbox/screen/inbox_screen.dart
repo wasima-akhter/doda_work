@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../core/utils/layout.dart';
 import '../controller/inbox_controller.dart';
 import 'inbox_screen_mobile.dart';

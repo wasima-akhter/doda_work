@@ -48,6 +48,7 @@ class Data {
 
   final List<String> attachments;
   final PendingUpdates pendingUpdates;
+  final List<WorkingHoursApiResModel> workingHours;
 
   Data({
     required this.id,
@@ -68,6 +69,7 @@ class Data {
     required this.pendingUpdates,
     this.isOnline,
     this.lastOnlineAt,
+    required this.workingHours,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -91,6 +93,11 @@ class Data {
     isVerified: json["isVerified"],
     attachments: List<String>.from(json["attachments"].map((x) => x)),
     pendingUpdates: PendingUpdates.fromJson(json["pendingUpdates"] ?? {}),
+    workingHours:
+        (json["workingHours"] as List?)
+            ?.map((e) => WorkingHoursApiResModel.fromJson(e))
+            .toList() ??
+        [],
   );
 
   Map<String, dynamic> toJson() => {
@@ -111,6 +118,9 @@ class Data {
     "isVerified": isVerified,
     "attachments": List<dynamic>.from(attachments.map((x) => x)),
     "pendingUpdates": pendingUpdates.toJson(),
+    "workingHours": List<WorkingHoursApiResModel>.from(
+      workingHours.map((x) => x.toJson()),
+    ),
   };
 }
 
@@ -200,4 +210,40 @@ class ServiceCategory {
       ServiceCategory(id: json["_id"], name: json["name"], icon: json["icon"]);
 
   Map<String, dynamic> toJson() => {"_id": id, "name": name, "icon": icon};
+}
+
+//
+class WorkingHoursApiResModel {
+  WorkingHoursApiResModel({
+    required this.day,
+    required this.startTime,
+    required this.endTime,
+    required this.isAvailable,
+    required this.id,
+  });
+
+  final String? day;
+  final String? startTime;
+  final String? endTime;
+  final bool? isAvailable;
+  final String? id;
+
+  factory WorkingHoursApiResModel.fromJson(Map<String, dynamic> json) {
+    return WorkingHoursApiResModel(
+      day: json["day"] ?? '',
+      startTime: json["startTime"] ?? '',
+      endTime: json["endTime"] ?? '',
+      isAvailable: json["isAvailable"] ?? false,
+      id: json["_id"] ?? '',
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      "_id": id,
+      "day": day,
+      "startTime": startTime,
+      "endTime": endTime,
+      "isAvailable": isAvailable,
+    };
+  }
 }

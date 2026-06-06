@@ -25,6 +25,7 @@ class InboxController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
     receiverId = Get.parameters['receiverId'];
     name = Get.parameters['name'] ?? 'Unknown';
     avatar = Get.parameters['avatar'] ?? '';
@@ -206,6 +207,7 @@ class InboxController extends GetxController {
   bool hasMore = true;
   RxBool isBlock = false.obs;
   RxBool isBlockedByMe = false.obs;
+  RxBool isPeerActive = false.obs;
 
   Future<void> getOldMessages({bool isPagination = false}) async {
     if (isPagination && !hasMore) return;
@@ -234,6 +236,10 @@ class InboxController extends GetxController {
         );
 
         debugPrint(' result of old messages: $result ');
+        debugPrint('user status in chat inbox: ${result.activeNow} ');
+
+        isPeerActive.value = result.activeNow;
+
         // debugPrint(
         //   const JsonEncoder.withIndent(
         //     '  ',

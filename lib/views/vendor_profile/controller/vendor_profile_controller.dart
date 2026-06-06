@@ -47,6 +47,7 @@ class VendorProfileController extends GetxController {
     debugPrint(
       '   Token: ${AppStorage.token.isNotEmpty ? "Present" : "Empty"}',
     );
+    debugPrint('   Token: ${AppStorage.token}');
     debugPrint('   Is Vendor: ${AppStorage.isVendor}');
     debugPrint('   Is Logged In: ${AppStorage.isLoggedIn}');
 
@@ -111,6 +112,9 @@ class VendorProfileController extends GetxController {
       final email = emailController.text.trim();
       isEmailValid.value = GetUtils.isEmail(email);
     });
+
+    // workingHours:
+    initializeWorkingHours();
   }
 
   // Other variables
@@ -176,6 +180,7 @@ class VendorProfileController extends GetxController {
       debugPrint('📦 Body: $body');
       debugPrint('📁 Files: ${fileMap.keys.toList()}');
       debugPrint('🔑 Token: ${token.substring(0, 20)}...');
+      debugPrint('🔑 Token full: $token');
       debugPrint('👤 Is Vendor: ${AppStorage.isVendor}');
 
       await ApiRequest.multiMultipartRequest(
@@ -238,50 +243,74 @@ class VendorProfileController extends GetxController {
     return AppStorage.isVendor;
   }
 
-  final RxList<WorkingHour> workingHours = <WorkingHour>[
-    WorkingHour(
-      day: "Monday",
-      startTime: "09:00",
-      endTime: "18:00",
-      isAvailable: true,
-    ),
-    WorkingHour(
-      day: "Tuesday",
-      startTime: "09:00",
-      endTime: "18:00",
-      isAvailable: true,
-    ),
-    WorkingHour(
-      day: "Wednesday",
-      startTime: "09:00",
-      endTime: "18:00",
-      isAvailable: true,
-    ),
-    WorkingHour(
-      day: "Thursday",
-      startTime: "09:00",
-      endTime: "18:00",
-      isAvailable: true,
-    ),
-    WorkingHour(
-      day: "Friday",
-      startTime: "09:00",
-      endTime: "18:00",
-      isAvailable: true,
-    ),
-    WorkingHour(
-      day: "Saturday",
-      startTime: "09:00",
-      endTime: "18:00",
-      isAvailable: false,
-    ),
-    WorkingHour(
-      day: "Sunday",
-      startTime: "09:00",
-      endTime: "18:00",
-      isAvailable: false,
-    ),
-  ].obs;
+  final RxList<WorkingHour> workingHours = <WorkingHour>[].obs;
+  void initializeWorkingHours() {
+    final profileHours = Get.find<ProfileController>()
+        .providerProfileModel
+        .value
+        ?.data
+        .workingHours;
+
+    if (profileHours == null || profileHours.isEmpty) {
+      workingHours.assignAll([
+        // WorkingHour(
+        //   day: "Monday",
+        //   startTime: "09:00",
+        //   endTime: "18:00",
+        //   isAvailable: false,
+        // ),
+        // WorkingHour(
+        //   day: "Tuesday",
+        //   startTime: "09:00",
+        //   endTime: "18:00",
+        //   isAvailable: false,
+        // ),
+        // WorkingHour(
+        //   day: "Wednesday",
+        //   startTime: "09:00",
+        //   endTime: "18:00",
+        //   isAvailable: false,
+        // ),
+        // WorkingHour(
+        //   day: "Thursday",
+        //   startTime: "09:00",
+        //   endTime: "18:00",
+        //   isAvailable: false,
+        // ),
+        // WorkingHour(
+        //   day: "Friday",
+        //   startTime: "09:00",
+        //   endTime: "18:00",
+        //   isAvailable: false,
+        // ),
+        // WorkingHour(
+        //   day: "Saturday",
+        //   startTime: "09:00",
+        //   endTime: "18:00",
+        //   isAvailable: false,
+        // ),
+        // WorkingHour(
+        //   day: "Sunday",
+        //   startTime: "09:00",
+        //   endTime: "18:00",
+        //   isAvailable: false,
+        // ),
+      ]);
+      return;
+    }
+
+    workingHours.assignAll(
+      profileHours.map(
+        (e) => WorkingHour(
+          day: e.day ?? '',
+          startTime: e.startTime ?? '09:00',
+          endTime: e.endTime ?? '18:00',
+          isAvailable: e.isAvailable ?? false,
+        ),
+      ),
+    );
+  }
+
   Map<String, dynamic> _prepareRequestBody() {
     return {
       'companyName': nameController.text.trim(),
@@ -293,7 +322,10 @@ class VendorProfileController extends GetxController {
       "serviceCategories": selectedServiceList,
       "serviceLocation": selectedAddress.value,
       // new
-      "workingHours": workingHours.map((e) => e.toJson()).toList(),
+      "workingHours": workingHours
+          .where((e) => e.isAvailable)
+          .map((e) => e.toJson())
+          .toList(),
     };
   }
 

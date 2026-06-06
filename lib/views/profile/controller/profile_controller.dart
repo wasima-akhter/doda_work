@@ -48,6 +48,7 @@ class ProfileController extends GetxController {
   }
 
   Future<void> getProviderProfile() async {
+    debugPrint('-->Token in profile: ${AppStorage.token}');
     try {
       await ApiRequest.get<ProviderProfileModels>(
         fromJson: ProviderProfileModels.fromJson,

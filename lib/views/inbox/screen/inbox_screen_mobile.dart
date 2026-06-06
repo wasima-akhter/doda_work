@@ -93,11 +93,17 @@ class InboxScreenMobile extends GetView<InboxController> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Text(
-                            "Active now",
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
+                          Obx(
+                            () => Text(
+                              controller.isPeerActive.value
+                                  ? "Active now"
+                                  : "Inactive",
+                              style: TextStyle(
+                                color: controller.isPeerActive.value
+                                    ? CustomColors.primary
+                                    : Colors.grey[600],
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ],

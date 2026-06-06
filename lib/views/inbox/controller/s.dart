@@ -3,12 +3,14 @@ class AllConversationModel {
   final Conversation? conversation;
   final String message;
   final BlockStatus blockStatus;
+  final bool activeNow;
 
   AllConversationModel({
     required this.status,
     required this.conversation,
     required this.message,
     required this.blockStatus,
+    required this.activeNow,
   });
 
   factory AllConversationModel.fromJson(Map<String, dynamic> json) =>
@@ -17,18 +19,18 @@ class AllConversationModel {
         conversation: json["conversation"] == null
             ? null
             : Conversation.fromJson(
-          json["conversation"] as Map<String, dynamic>,
-        ),
+                json["conversation"] as Map<String, dynamic>,
+              ),
         message: json["message"] ?? '',
         blockStatus: json["blockStatus"] == null
             ? BlockStatus(
-          isBlockedByYou: false,
-          isBlockedByPartner: false,
-          isBlocked: false,
-        )
-            : BlockStatus.fromJson(
-          json["blockStatus"] as Map<String, dynamic>,
-        ),
+                isBlockedByYou: false,
+                isBlockedByPartner: false,
+                isBlocked: false,
+              )
+            : BlockStatus.fromJson(json["blockStatus"] as Map<String, dynamic>),
+
+        activeNow: json["activeNow"] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -36,6 +38,7 @@ class AllConversationModel {
     "conversation": conversation?.toJson(),
     "message": message,
     "blockStatus": blockStatus.toJson(),
+    "activeNow": activeNow,
   };
 }
 
@@ -84,8 +87,12 @@ class Conversation {
 
   factory Conversation.fromJson(Map<String, dynamic> json) => Conversation(
     id: json["_id"],
-    participants: List<Participant>.from(json["participants"].map((x) => Participant.fromJson(x))),
-    messages: List<Message>.from(json["messages"].map((x) => Message.fromJson(x))),
+    participants: List<Participant>.from(
+      json["participants"].map((x) => Participant.fromJson(x)),
+    ),
+    messages: List<Message>.from(
+      json["messages"].map((x) => Message.fromJson(x)),
+    ),
     blockedBy: List<dynamic>.from(json["blockedBy"].map((x) => x)),
     createdAt: DateTime.parse(json["createdAt"]),
     updatedAt: DateTime.parse(json["updatedAt"]),

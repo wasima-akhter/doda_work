@@ -67,6 +67,7 @@ class ApiEndPoints {
   static final updateProviderLicence = '${baseUrl}provider/update-profile';
 
   static final categoryAll = '${baseUrl}category/active-categories';
+  static final providerReports = '${baseUrl}provider/reports';
 
   // static String getServiceRequestAll({required int page}) {
   //   return '${baseUrl}service-requests/my-requests?page=$page';

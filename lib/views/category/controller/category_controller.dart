@@ -1,10 +1,9 @@
 import 'package:doda_work/core/api/end_point/api_end_points.dart';
 import 'package:doda_work/core/api/services/api_request.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
-import '../model/all_category_model.dart';
-
+import '../model/provider_report_models.dart';
+/*
 class CategoryController extends GetxController {
   final RxString expandedCategoryId = ''.obs;
 
@@ -49,6 +48,40 @@ class CategoryController extends GetxController {
   @override
   void onReady() {
     getCategory();
+    super.onReady();
+  }
+}
+
+*/
+
+class CategoryController extends GetxController {
+  final Rxn<ProviderReportData> reportData = Rxn<ProviderReportData>();
+
+  final RxBool isLoading = false.obs;
+
+  Future<void> getReport() async {
+    try {
+      isLoading.value = true;
+
+      final data = await ApiClient.get(url: ApiEndPoints.providerReports);
+
+      if (data.statusCode == 200) {
+        final report = ProviderReportModel.fromJson(data.body);
+
+        reportData.value = report.data;
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> refreshReport() async {
+    await getReport();
+  }
+
+  @override
+  void onReady() {
+    getReport();
     super.onReady();
   }
 }

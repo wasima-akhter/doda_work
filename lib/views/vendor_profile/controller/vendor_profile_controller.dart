@@ -35,7 +35,7 @@ class VendorProfileController extends GetxController {
   final Rxn<LatLng> selectedLatLng = Rxn<LatLng>();
   final RxString selectedAddress = "".obs;
   final RxList selectedServiceList = [].obs;
-
+  /*
   @override
   void onInit() {
     super.onInit();
@@ -114,6 +114,45 @@ class VendorProfileController extends GetxController {
     });
 
     // workingHours:
+    initializeWorkingHours();
+  }
+*/
+  @override
+  void onInit() {
+    super.onInit();
+
+    getServiceCategory();
+
+    populateFormData();
+  }
+
+  Future<void> refreshProfileData() async {
+    await Get.find<ProfileController>().getProviderProfile();
+
+    populateFormData();
+  }
+
+  void populateFormData() {
+    final profile =
+        Get.find<ProfileController>().providerProfileModel.value?.data;
+
+    if (profile == null) return;
+
+    nameController.text = profile.companyName ?? "";
+    contactPersonController.text = profile.contactPerson ?? "";
+    coveredRadius.text = profile.coveredRadius?.toString() ?? "";
+    websiteController.text = profile.website ?? "";
+
+    selectedAddress.value = profile.serviceLocation ?? "";
+
+    if (profile.latitude != null && profile.longitude != null) {
+      selectedLatLng.value = LatLng(profile.latitude!, profile.longitude!);
+    }
+
+    selectedServiceList.assignAll(
+      (profile.serviceCategories ?? []).map((e) => e.id).toList(),
+    );
+
     initializeWorkingHours();
   }
 
@@ -251,63 +290,31 @@ class VendorProfileController extends GetxController {
         ?.data
         .workingHours;
 
-    if (profileHours == null || profileHours.isEmpty) {
-      workingHours.assignAll([
-        // WorkingHour(
-        //   day: "Monday",
-        //   startTime: "09:00",
-        //   endTime: "18:00",
-        //   isAvailable: false,
-        // ),
-        // WorkingHour(
-        //   day: "Tuesday",
-        //   startTime: "09:00",
-        //   endTime: "18:00",
-        //   isAvailable: false,
-        // ),
-        // WorkingHour(
-        //   day: "Wednesday",
-        //   startTime: "09:00",
-        //   endTime: "18:00",
-        //   isAvailable: false,
-        // ),
-        // WorkingHour(
-        //   day: "Thursday",
-        //   startTime: "09:00",
-        //   endTime: "18:00",
-        //   isAvailable: false,
-        // ),
-        // WorkingHour(
-        //   day: "Friday",
-        //   startTime: "09:00",
-        //   endTime: "18:00",
-        //   isAvailable: false,
-        // ),
-        // WorkingHour(
-        //   day: "Saturday",
-        //   startTime: "09:00",
-        //   endTime: "18:00",
-        //   isAvailable: false,
-        // ),
-        // WorkingHour(
-        //   day: "Sunday",
-        //   startTime: "09:00",
-        //   endTime: "18:00",
-        //   isAvailable: false,
-        // ),
-      ]);
-      return;
-    }
+    const allDays = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+
+    final apiMap = {
+      for (final item in (profileHours ?? [])) (item.day ?? ""): item,
+    };
 
     workingHours.assignAll(
-      profileHours.map(
-        (e) => WorkingHour(
-          day: e.day ?? '',
-          startTime: e.startTime ?? '09:00',
-          endTime: e.endTime ?? '18:00',
-          isAvailable: e.isAvailable ?? false,
-        ),
-      ),
+      allDays.map((day) {
+        final apiItem = apiMap[day];
+
+        return WorkingHour(
+          day: day,
+          startTime: apiItem?.startTime ?? "09:00",
+          endTime: apiItem?.endTime ?? "18:00",
+          isAvailable: apiItem?.isAvailable ?? false,
+        );
+      }).toList(),
     );
   }
 

@@ -9,9 +9,9 @@ class NavigationController extends GetxController {
       iconPath: AppStorage.isProvider
           ? Assets
                 .icons
-                .category // Vendor sees Categories
+                .dashboardTabIcon // Vendor sees Categories
           : Assets.icons.request1, // User sees Service Request
-      name: AppStorage.isProvider ? "Categories" : "Service Request",
+      name: AppStorage.isProvider ? "Reports" : "Service Request",
     ),
     NavigationModel(iconPath: Assets.icons.frame1, name: "Chat"),
     NavigationModel(iconPath: Assets.icons.vuesax, name: "Profile"),

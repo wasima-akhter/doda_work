@@ -274,7 +274,7 @@ class HomeVendorScreenMobile extends GetView<HomeVendorController> {
     return const Center(
       child: Padding(
         padding: EdgeInsets.all(16.0),
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: CustomColors.primary),
       ),
     );
   }

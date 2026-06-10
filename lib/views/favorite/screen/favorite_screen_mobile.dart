@@ -11,7 +11,9 @@ class FavoriteScreenMobile extends GetView<FavoriteController> {
         child: Obx(() {
           // Loading
           if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: CustomColors.primary),
+            );
           }
 
           // Empty state

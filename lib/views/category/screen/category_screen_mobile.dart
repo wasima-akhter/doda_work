@@ -19,7 +19,7 @@ class ExpandableCardList extends GetView<CategoryController> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (controller.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CircularProgressIndicator(color: CustomColors.primary));
       }
       return ListView.builder(
         itemCount: controller.allCategory.length,
@@ -103,127 +103,165 @@ class ExpandableCardList extends GetView<CategoryController> {
   }
 }
 */
-part of 'dashboard_screen.dart';
 
-class DashboardScreenMobile extends GetView<DashboardController> {
-  const DashboardScreenMobile({super.key});
+class CategoryScreenMobile extends GetView<CategoryController> {
+  const CategoryScreenMobile({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF7F7F7),
+      appBar: CommonAppbar(title: "Dashboard"),
+      body: SafeArea(child: DashboardCardList()),
+    );
+  }
+}
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Colors.orange,
-        child: const Icon(Icons.handshake_outlined),
-      ),
+class DashboardCardList extends GetView<CategoryController> {
+  const DashboardCardList({super.key});
 
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.centerDocked,
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.isReportLoading.value) {
+        return const Center(
+          child: CircularProgressIndicator(color: CustomColors.primary),
+        );
+      }
 
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8,
-        child: SizedBox(
-          height: 70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              _NavItem(
-                icon: Icons.home_outlined,
-                title: "Home",
-              ),
-              SizedBox(width: 40),
-              _NavItem(
-                icon: Icons.chat_bubble_outline,
-                title: "Chat",
-              ),
-              _NavItem(
-                icon: Icons.person_outline,
-                title: "Profile",
-              ),
-            ],
-          ),
+      return RefreshIndicator(
+        color: CustomColors.primary,
+        onRefresh: () async {
+          controller.getReports();
+        },
+        child: ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: controller.dashboardItems.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 16),
+          itemBuilder: (context, index) {
+            final item = controller.dashboardItems[index];
+
+            return DashboardCard(item: item);
+          },
         ),
+      );
+    });
+  }
+}
+
+class DashboardCard extends StatelessWidget {
+  final DashboardItemModel item;
+
+  const DashboardCard({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        // color: CustomColors.whiteColor,
+        color: CustomColors.grayShade.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          // BoxShadow(
+          //   color: Colors.black.withAlpha(10),
+          //   blurRadius: 10,
+          //   offset: const Offset(0, 4),
+          // ),
+        ],
       ),
+      child: Row(
+        children: [
+          /// Icon Box
+          Container(
+            width: 50.w,
+            height: 50.w,
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: CustomColors.whiteColor.withValues(alpha: 0.99),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            // child: Icon(item.icon, size: 20, color: item.iconColor),
+            child: SafeSvgAsset(assetPath: item.icon),
+          ),
 
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
+          const SizedBox(width: 16),
 
-              const Text(
-                "Dashboard",
-                style: TextStyle(
-                  fontSize: 30,
+          /// Content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextWidget(
+                  item.title,
+                  fontSize: Dimensions.titleSmall,
+                  fontWeight: FontWeight.w500,
+                ),
+
+                const SizedBox(height: 4),
+
+                TextWidget(
+                  item.value,
+                  fontSize: Dimensions.titleLarge,
                   fontWeight: FontWeight.bold,
                 ),
-              ),
 
-              const SizedBox(height: 25),
+                const SizedBox(height: 4),
 
-              Expanded(
-                child: ListView(
-                  children: const [
-                    DashboardCard(
-                      title: "Total Request",
-                      value: "120",
-                      subtitle: "12 New Request",
-                      percentage: "+16.56%",
-                      isPositive: true,
-                      icon: Icons.menu,
-                      iconColor: Colors.orange,
-                    ),
-
-                    DashboardCard(
-                      title: "Total Accepted",
-                      value: "113",
-                      subtitle: "5 Upcoming Task",
-                      percentage: "+16.56%",
-                      isPositive: true,
-                      icon: Icons.check_circle_outline,
-                      iconColor: Colors.orange,
-                    ),
-
-                    DashboardCard(
-                      title: "Total Completed",
-                      value: "56",
-                      subtitle: "3 Uncompleted Task",
-                      percentage: "+16.56%",
-                      isPositive: true,
-                      icon: Icons.verified,
-                      iconColor: Colors.blue,
-                    ),
-
-                    DashboardCard(
-                      title: "Total Rejected",
-                      value: "7",
-                      subtitle: "5 Rejection this month",
-                      percentage: "-4.56%",
-                      isPositive: false,
-                      icon: Icons.cancel,
-                      iconColor: Colors.red,
-                    ),
-
-                    DashboardCard(
-                      title: "Total Earning",
-                      value: "\$5,566",
-                      subtitle: "\$1,206 this month",
-                      percentage: "+16.56%",
-                      isPositive: true,
-                      icon: Icons.attach_money,
-                      iconColor: Colors.orange,
-                    ),
-                  ],
+                TextWidget(
+                  item.subtitle,
+                  color: Colors.grey,
+                  fontSize: Dimensions.bodySmall,
                 ),
+              ],
+            ),
+          ),
+
+          /// Percentage
+          Column(
+            children: [
+              Row(
+                children: [
+                  TextWidget(
+                    item.percentage,
+                    fontWeight: FontWeight.w600,
+                    fontSize: Dimensions.titleSmall,
+                    color: item.isPositive ? Colors.green : Colors.red,
+                  ),
+
+                  const SizedBox(width: 4),
+
+                  Icon(
+                    item.isPositive
+                        ? Icons.arrow_circle_up_outlined
+                        : Icons.arrow_circle_down_outlined,
+                    color: item.isPositive ? Colors.green : Colors.red,
+                  ),
+                ],
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
+}
+
+class DashboardItemModel {
+  final String title;
+  final String value;
+  final String subtitle;
+  final String percentage;
+  final bool isPositive;
+  final String icon;
+  final Color? iconColor;
+
+  DashboardItemModel({
+    required this.title,
+    required this.value,
+    required this.subtitle,
+    required this.percentage,
+    required this.isPositive,
+    required this.icon,
+    this.iconColor,
+  });
 }

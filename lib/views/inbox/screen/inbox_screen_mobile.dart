@@ -143,7 +143,7 @@ class InboxScreenMobile extends GetView<InboxController> {
                   //
                   // Obx(
                   //   () => controller.isBlockLoading.value
-                  //       ? CircularProgressIndicator()
+                  //       ? CircularProgressIndicator(color: CustomColors.primary)
                   //       : IconButton(
                   //           onPressed: () => controller.blockUser(),
                   //           icon: Icon(Icons.block),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+
 import '../core/utils/basic_import.dart';
 import '../core/utils/extensions.dart';
 
@@ -30,13 +31,24 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.initialDate;
+
+    // Ensure initialDate is not before minDate
+    if (widget.initialDate != null && widget.minDate != null) {
+      _selectedDate = widget.initialDate!.isBefore(widget.minDate!)
+          ? widget.minDate
+          : widget.initialDate;
+    } else {
+      _selectedDate = widget.initialDate ?? widget.minDate ?? DateTime.now();
+    }
   }
 
   Future<void> _pickDate(BuildContext context) async {
     final DateTime now = DateTime.now();
-    final DateTime firstDate = widget.minDate ?? now;
-    DateTime tempDate = _selectedDate ?? firstDate;
+    final DateTime minDate = widget.minDate ?? now;
+
+    // Ensure initial date is within bounds
+    DateTime tempDate = _selectedDate ?? minDate;
+    if (tempDate.isBefore(minDate)) tempDate = minDate;
 
     await showCupertinoModalPopup(
       context: context,
@@ -85,7 +97,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
               child: CupertinoDatePicker(
                 mode: CupertinoDatePickerMode.date,
                 initialDateTime: tempDate,
-                minimumDate: firstDate,
+                minimumDate: minDate,
                 maximumDate: DateTime(2100),
                 onDateTimeChanged: (DateTime newDate) {
                   tempDate = newDate;
@@ -101,17 +113,20 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: crossStart,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextWidget(
-          padding: EdgeInsetsGeometry.only(
-            bottom: Dimensions.spaceBetweenInputTitleAndBox * 0.6,
+        if (widget.label != null)
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: Dimensions.spaceBetweenInputTitleAndBox * 0.6,
+            ),
+            child: TextWidget(
+              widget.label!,
+              fontSize: Dimensions.titleSmall,
+              fontWeight: FontWeight.w500,
+              color: CustomColors.blackColor.withAlpha(200),
+            ),
           ),
-          widget.label ?? "Select Date",
-          fontSize: Dimensions.titleSmall,
-          fontWeight: FontWeight.w500,
-          color: CustomColors.blackColor.withAlpha(888),
-        ),
         InkWell(
           onTap: () => _pickDate(context),
           borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),

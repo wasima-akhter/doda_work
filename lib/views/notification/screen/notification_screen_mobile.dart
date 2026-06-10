@@ -11,6 +11,7 @@ class NotificationScreenMobile extends GetView<NotificationController> {
         onRefresh: () async {
           controller.pagingController.refresh();
         },
+        color: CustomColors.primary,
         child: PagedListView(
           padding: EdgeInsets.symmetric(horizontal: 12),
           pagingController: controller.pagingController,

@@ -18,8 +18,9 @@ class FullScreenImageViewer extends StatelessWidget {
       image = CachedNetworkImage(
         imageUrl: imageUrl ?? '',
         fit: BoxFit.contain,
-        placeholder: (_, __) =>
-            const Center(child: CircularProgressIndicator()),
+        placeholder: (_, __) => const Center(
+          child: CircularProgressIndicator(color: CustomColors.primary),
+        ),
         errorWidget: (_, __, error) {
           debugPrint('Image preview error: $error');
 

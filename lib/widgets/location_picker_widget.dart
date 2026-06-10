@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:geolocator/geolocator.dart';
 
 import '../core/utils/basic_import.dart';
 
@@ -285,7 +285,7 @@ class _LocationPickerWidgetState extends State<LocationPickerWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(),
+                  CircularProgressIndicator(color: CustomColors.primary),
                   SizedBox(height: 16),
                   Text('Getting your location...'),
                 ],

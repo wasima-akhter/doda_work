@@ -18,7 +18,7 @@ class ReviewRatingScreenMobile extends GetView<ReviewRatingController> {
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: CustomColors.primary));
           }
 
           if (controller.reviewsList.isEmpty) {

@@ -30,7 +30,7 @@ class OthersFieldWidget extends StatelessWidget {
         if (!showOnlyLocation) ...[
           Obx(() {
             if (categoryController.isLoading.value) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: CustomColors.primary));
             }
             if (categoryController.filteredCategory.isEmpty) {
               return Center(

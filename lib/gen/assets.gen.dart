@@ -72,7 +72,6 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/Green.svg
   String get green => 'assets/icons/Green.svg';
-  String get home => 'assets/icons/home.svg';
 
   /// File path: assets/icons/Group.svg
   String get group => 'assets/icons/Group.svg';
@@ -86,11 +85,29 @@ class $AssetsIconsGen {
   /// File path: assets/icons/activity.svg
   String get activity => 'assets/icons/activity.svg';
 
+  /// File path: assets/icons/arrow_circle_down.svg
+  String get arrowCircleDown => 'assets/icons/arrow_circle_down.svg';
+
+  /// File path: assets/icons/arrow_circle_up.svg
+  String get arrowCircleUp => 'assets/icons/arrow_circle_up.svg';
+
   /// File path: assets/icons/category.svg
   String get category => 'assets/icons/category.svg';
 
+  /// File path: assets/icons/currency.svg
+  String get currency => 'assets/icons/currency.svg';
+
+  /// File path: assets/icons/dashboard_tab_icon.svg
+  String get dashboardTabIcon => 'assets/icons/dashboard_tab_icon.svg';
+
   /// File path: assets/icons/empty.svg
   String get empty => 'assets/icons/empty.svg';
+
+  /// File path: assets/icons/home.svg
+  String get home => 'assets/icons/home.svg';
+
+  /// File path: assets/icons/menu_dash.svg
+  String get menuDash => 'assets/icons/menu_dash.svg';
 
   /// File path: assets/icons/paper-plane-top 1.svg
   String get paperPlaneTop1 => 'assets/icons/paper-plane-top 1.svg';
@@ -107,6 +124,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/success.svg
   String get success => 'assets/icons/success.svg';
 
+  /// File path: assets/icons/success_dash.svg
+  String get successDash => 'assets/icons/success_dash.svg';
+
+  /// File path: assets/icons/success_dash_waved.svg
+  String get successDashWaved => 'assets/icons/success_dash_waved.svg';
+
   /// File path: assets/icons/verified.svg
   String get verified => 'assets/icons/verified.svg';
 
@@ -116,19 +139,26 @@ class $AssetsIconsGen {
   /// List of all assets
   List<String> get values => [
     frame1,
-    home,
     green,
     group,
     popup,
     vector,
     activity,
+    arrowCircleDown,
+    arrowCircleUp,
     category,
+    currency,
+    dashboardTabIcon,
     empty,
+    home,
+    menuDash,
     paperPlaneTop1,
     picture1,
     reject,
     request1,
     success,
+    successDash,
+    successDashWaved,
     verified,
     vuesax,
   ];

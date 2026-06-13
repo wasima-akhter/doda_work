@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:doda_work/core/api/model/basic_success_model.dart';
 import 'package:doda_work/core/utils/message_helper.dart';
 import 'package:doda_work/widgets/success_dialog.dart';
@@ -12,8 +14,9 @@ import 'api.dart';
 class OtpRequiredException implements Exception {
   final String message;
   final String email;
+  final String companyName;
 
-  OtpRequiredException(this.message, this.email);
+  OtpRequiredException(this.message, this.email, {required this.companyName});
 }
 
 class AuthService {
@@ -117,9 +120,11 @@ class AuthService {
         },
       );
     } on OtpRequiredException catch (e) {
+      log("e.companyName: ${e.companyName}");
       // ============================
       // 🔥 OTP FLOW HERE
       // ============================
+      AppStorage.savedName = e.companyName;
 
       await AuthService.resendOtpService(isLoading: isLoading, email: e.email);
 
@@ -156,7 +161,6 @@ class AuthService {
       body: inputBody,
       onSuccess: (result) {
         Get.toNamed(Routes.verifyScreen, arguments: {"email": email});
-
         AppStorage.savedName = name;
       },
     );

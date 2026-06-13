@@ -205,8 +205,7 @@ class AditionalController extends GetxController {
       files: {},
       body: {
         // "companyName": Get.find<RegisterController>().nameController.text,
-        "companyName": AppStorage.savedName ?? 'UnNamed',
-
+        // "companyName": AppStorage.savedName ?? 'UnNamed',
         "website": linkController.text,
         "serviceCategories": selectedServiceList,
         "serviceLocation": selectedAddress.value,

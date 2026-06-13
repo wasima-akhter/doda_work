@@ -147,6 +147,7 @@ class ApiRequest {
           throw OtpRequiredException(
             errorMessage.toString(),
             body['email'].toString() ?? '',
+            companyName: body['email'].toString() ?? '',
           );
         }
 

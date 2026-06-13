@@ -180,6 +180,9 @@ class _RequestScreenState extends State<RequestScreen> {
               child: PrimaryButtonWidget(
                 title: "Preview",
                 onPressed: () {
+                  debugPrint(
+                    ' start time: ${controller.startDateTime.value}, end time:${controller.endDateTime.value} ',
+                  );
                   if (controller.isStep2Valid()) {
                     controller.currentStep.value = 2;
                   }

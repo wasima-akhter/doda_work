@@ -249,7 +249,8 @@ class VendorProfileController extends GetxController {
     debugPrint('   Message: ${response.message}');
     debugPrint('   Data Message: ${response.data.message}');
     //
-    Get.close(1);
+    // Get.close(1);
+    refreshProfileData();
 
     //
     // _showSnackBar(response.message.capitalizeFirst ?? '', isError: false);

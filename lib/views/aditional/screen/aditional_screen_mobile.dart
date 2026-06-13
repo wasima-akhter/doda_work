@@ -9,39 +9,48 @@ class AditionalScreenMobile extends GetView<AditionalController> {
         ? ApiEndPoints.googleApiKeyAndroid
         : ApiEndPoints.googleApiKeyIos;
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Obx(
-          () => AuthAppBar(
-            title: controller.currentStep.value == 1
-                ? 'Preview Registration'
-                : 'Service Provider registration',
-            isBack: true,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (controller.currentStep.value > 0) {
+          controller.currentStep.value = 0;
+        }
+      },
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+
+          child: Obx(
+            () => AuthAppBar(
+              title: controller.currentStep.value == 1
+                  ? 'Preview Registration'
+                  : 'Service Provider registration',
+              isBack: false,
+            ),
           ),
         ),
-      ),
-      body: Obx(() {
-        if (controller.isLoading.value) return const LoadingWidget();
-        return SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Dimensions.defaultHorizontalSize,
-                  vertical: 16,
+        body: Obx(() {
+          if (controller.isLoading.value) return const LoadingWidget();
+          return SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Dimensions.defaultHorizontalSize,
+                    vertical: 16,
+                  ),
+                  child: _buildStepProgress(controller.currentStep.value),
                 ),
-                child: _buildStepProgress(controller.currentStep.value),
-              ),
-              Expanded(
-                child: controller.currentStep.value == 1
-                    ? _buildPreviewStep()
-                    : _buildFormStep(context, apiKeyMap),
-              ),
-            ],
-          ),
-        );
-      }),
+                Expanded(
+                  child: controller.currentStep.value == 1
+                      ? _buildPreviewStep()
+                      : _buildFormStep(context, apiKeyMap),
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
 

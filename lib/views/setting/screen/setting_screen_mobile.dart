@@ -32,70 +32,68 @@ class SettingScreenMobile extends GetView<SettingController> {
   }
 
   void _showDeleteDialog() {
-    final controller = Get.put(SettingController());
+    final controller = Get.find<SettingController>();
 
     Get.dialog(
+      barrierDismissible: false,
       AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),
         ),
-        title: TextWidget(
-          'Delete Account',
-          fontSize: Dimensions.titleLarge,
-          fontWeight: FontWeight.w500,
-        ),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        contentPadding: const EdgeInsets.all(16),
+        title: const TextWidget('Delete Account'),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: const [
-              TextWidget('Are you sure you want to Delete Account?'),
+            children: [
+              PrimaryInputFieldWidget(
+                controller: controller.emailController,
+                label: "Email",
+                hintText: "Enter your email",
+              ),
+              Space.height.v10,
+              PrimaryInputFieldWidget(
+                controller: controller.passwordController,
+                label: "Password",
+                hintText: "Enter your password",
+                isPassword: true,
+              ),
             ],
           ),
-        ),
-        actionsPadding: EdgeInsets.symmetric(
-          horizontal: Dimensions.defaultHorizontalSize,
-          vertical: Dimensions.heightSize * 0.5,
         ),
         actions: [
           ElevatedButton(
             onPressed: () {
-              Get.back(); // Works properly now
+              Get.back();
+              controller.clearForm();
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: CustomColors.primary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),
-              ),
-            ),
-            child: TextWidget('No', color: CustomColors.whiteColor),
+            child: const TextWidget('No'),
           ),
           Obx(
             () => ElevatedButton(
               onPressed: controller.isLoading.value
                   ? null
-                  : () => controller.deleteUserAccount(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CustomColors.whiteColor,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: CustomColors.rejected),
-                  borderRadius: BorderRadius.circular(Dimensions.radius * 0.8),
-                ),
-              ),
+                  : () async {
+                      await controller.deleteUserAccount(
+                        email: controller.emailController.text.trim(),
+                        password: controller.passwordController.text.trim(),
+                      );
+                      controller.clearForm();
+                    },
               child: controller.isLoading.value
                   ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
+                      height: 15,
+                      width: 15,
+                      child: const CircularProgressIndicator(
                         color: CustomColors.primary,
-                        strokeWidth: 2,
                       ),
                     )
-                  : TextWidget('Yes', color: CustomColors.rejected),
+                  : const TextWidget('Yes'),
             ),
           ),
         ],
       ),
-      barrierDismissible: true,
     );
   }
 

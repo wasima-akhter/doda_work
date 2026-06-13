@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:shadify/shadify.dart';
 
 import '../../../core/utils/basic_import.dart';
@@ -15,6 +17,8 @@ class ProfileTopHeaderWidgetView extends GetView<ProfileController> {
     return Obx(() {
       // Get user data
       final userData = controller.userProfileModel.value?.data;
+
+      log(' userData: $userData ');
 
       // Profile image URL
 
@@ -79,13 +83,18 @@ class ProfileTopHeaderWidgetView extends GetView<ProfileController> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // User Name
-                    TextWidget(
-                      userData?.name ?? "User Name",
-                      fontSize: Dimensions.titleSmall,
-                      fontWeight: FontWeight.w600,
-                      color: CustomColors.primary,
-                      maxLines: 1,
-                      textOverflow: TextOverflow.ellipsis,
+                    Builder(
+                      builder: (context) {
+                        debugPrint(' userData?.name: ${userData?.name} ');
+                        return TextWidget(
+                          userData?.name ?? "User Name",
+                          fontSize: Dimensions.titleSmall,
+                          fontWeight: FontWeight.w600,
+                          color: CustomColors.primary,
+                          maxLines: 1,
+                          textOverflow: TextOverflow.ellipsis,
+                        );
+                      },
                     ),
 
                     Space.height.v5,
@@ -184,6 +193,8 @@ class ProfileTopWidgetView extends GetView<ProfileController> {
 
     return Obx(() {
       final providerData = controller.providerProfileModel.value?.data;
+
+      log("providerData: $providerData");
 
       return Container(
         // height: cardHeight,

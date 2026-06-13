@@ -1,3 +1,4 @@
+/*
 class ProviderProfileModels {
   final int statusCode;
   final bool success;
@@ -124,23 +125,7 @@ class Data {
   };
 }
 
-int _toInt(dynamic v) {
-  if (v == null) return 0;
-  if (v is num) return v.toInt();
-  return int.tryParse(v.toString()) ?? 0;
-}
-
-bool? _toBool(dynamic v) {
-  if (v == null) return null;
-  if (v is bool) return v;
-  if (v is num) return v == 1;
-  return v.toString().toLowerCase() == "true";
-}
-
-DateTime? _toDate(dynamic v) {
-  if (v == null) return null;
-  return DateTime.tryParse(v.toString());
-}
+*/
 
 class AuthId {
   final String id;
@@ -246,4 +231,188 @@ class WorkingHoursApiResModel {
       "isAvailable": isAvailable,
     };
   }
+}
+
+class ProviderProfileModels {
+  final int statusCode;
+  final bool success;
+  final String message;
+  final Data data;
+
+  ProviderProfileModels({
+    required this.statusCode,
+    required this.success,
+    required this.message,
+    required this.data,
+  });
+
+  factory ProviderProfileModels.fromJson(Map<String, dynamic> json) {
+    return ProviderProfileModels(
+      statusCode: _asInt(json["statusCode"]),
+      success: _asBool(json["success"]),
+      message: _asString(json["message"]),
+      data: Data.fromJson(json["data"] ?? {}),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "success": success,
+    "message": message,
+    "data": data.toJson(),
+  };
+}
+
+class Data {
+  final String id;
+  final AuthId authId;
+
+  final String companyName;
+  final String website;
+
+  final List<ServiceCategory> serviceCategories;
+
+  final double latitude;
+  final double longitude;
+
+  final int coveredRadius;
+  final String serviceLocation;
+  final String contactPerson;
+
+  final String profileImage;
+
+  final bool isActive;
+  final bool isRejected;
+  final bool isVerified;
+
+  final bool isOnline;
+  final DateTime? lastOnlineAt;
+
+  final List<String> attachments;
+  final PendingUpdates pendingUpdates;
+  final List<WorkingHoursApiResModel> workingHours;
+
+  Data({
+    required this.id,
+    required this.authId,
+    required this.companyName,
+    required this.website,
+    required this.serviceCategories,
+    required this.latitude,
+    required this.longitude,
+    required this.coveredRadius,
+    required this.serviceLocation,
+    required this.contactPerson,
+    required this.profileImage,
+    required this.isActive,
+    required this.isRejected,
+    required this.isVerified,
+    required this.isOnline,
+    required this.lastOnlineAt,
+    required this.attachments,
+    required this.pendingUpdates,
+    required this.workingHours,
+  });
+
+  factory Data.fromJson(Map<String, dynamic> json) {
+    return Data(
+      id: _asString(json["_id"]),
+      authId: AuthId.fromJson(json["authId"] ?? {}),
+
+      companyName: _asString(json["companyName"]),
+      website: _asString(json["website"]),
+
+      serviceCategories: (json["serviceCategories"] as List? ?? [])
+          .map((e) => ServiceCategory.fromJson(e ?? {}))
+          .toList(),
+
+      latitude: _asDouble(json["latitude"]),
+      longitude: _asDouble(json["longitude"]),
+
+      coveredRadius: _asInt(json["coveredRadius"]),
+      serviceLocation: _asString(json["serviceLocation"]),
+      contactPerson: _asString(json["contactPerson"]),
+
+      profileImage: _asString(json["profile_image"]),
+
+      isActive: _asBool(json["isActive"]),
+      isRejected: _asBool(json["isRejected"]),
+      isVerified: _asBool(json["isVerified"]),
+
+      isOnline: _asBool(json["isOnline"]),
+      lastOnlineAt: _toDate(json["lastOnlineAt"]),
+
+      attachments: (json["attachments"] as List? ?? [])
+          .map((e) => e.toString())
+          .toList(),
+
+      pendingUpdates: PendingUpdates.fromJson(json["pendingUpdates"] ?? {}),
+
+      workingHours: (json["workingHours"] as List? ?? [])
+          .map((e) => WorkingHoursApiResModel.fromJson(e ?? {}))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    "_id": id,
+    "authId": authId.toJson(),
+    "companyName": companyName,
+    "website": website,
+    "serviceCategories": serviceCategories.map((e) => e.toJson()).toList(),
+    "latitude": latitude,
+    "longitude": longitude,
+    "coveredRadius": coveredRadius,
+    "serviceLocation": serviceLocation,
+    "contactPerson": contactPerson,
+    "profile_image": profileImage,
+    "isActive": isActive,
+    "isRejected": isRejected,
+    "isVerified": isVerified,
+    "attachments": attachments,
+    "pendingUpdates": pendingUpdates.toJson(),
+    "workingHours": workingHours.map((e) => e.toJson()).toList(),
+  };
+}
+
+String _asString(dynamic v) {
+  if (v == null) return "";
+  return v.toString();
+}
+
+int _asInt(dynamic v) {
+  if (v == null) return 0;
+  if (v is num) return v.toInt();
+  return int.tryParse(v.toString()) ?? 0;
+}
+
+double _asDouble(dynamic v) {
+  if (v == null) return 0.0;
+  if (v is num) return v.toDouble();
+  return double.tryParse(v.toString()) ?? 0.0;
+}
+
+bool _asBool(dynamic v) {
+  if (v == null) return false;
+  if (v is bool) return v;
+  if (v is num) return v == 1;
+  return v.toString().toLowerCase() == "true";
+}
+
+DateTime? _toDate(dynamic v) {
+  if (v == null) return null;
+  return DateTime.tryParse(v.toString());
+}
+
+int _toInt(dynamic v) {
+  if (v == null) return 0;
+  if (v is num) return v.toInt();
+  return int.tryParse(v.toString()) ?? 0;
+}
+
+bool? _toBool(dynamic v) {
+  if (v == null) return null;
+  if (v is bool) return v;
+  if (v is num) return v == 1;
+  return v.toString().toLowerCase() == "true";
 }

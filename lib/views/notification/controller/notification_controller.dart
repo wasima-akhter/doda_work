@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class NotificationController extends GetxController {
-  final pagingController = PagingController<int, NotificationItem>(firstPageKey: 1);
+  final pagingController = PagingController<int, NotificationItem>(
+    firstPageKey: 1,
+  );
   bool isLoading = false;
 
   Future<void> fetch(int pageKey) async {
@@ -18,7 +20,29 @@ class NotificationController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        final newItems = NotificationModel.fromJson(response.body).data?.notification ?? [];
+        var newItems =
+            NotificationModel.fromJson(response.body).data?.notification ?? [];
+
+        // newItems = [
+        //   NotificationItem(
+        //     id: "n1",
+        //     title:
+        //         "New Booking Received aiysgd iuasudhoiuasd oiasjdi asidj apsd jpoask dopas kdo kad",
+        //     message:
+        //         "You have received a new service request from John Doe. auyguyadsfgs dfgsdfsdgf ",
+        //     isRead: false,
+        //     createdAt: DateTime.now().subtract(const Duration(minutes: 10)),
+        //     updatedAt: DateTime.now().subtract(const Duration(minutes: 10)),
+        //   ),
+        //   NotificationItem(
+        //     id: "n2",
+        //     title: "Payment Successful",
+        //     message: "Your payment of \$120 has been successfully processed.",
+        //     isRead: true,
+        //     createdAt: DateTime.now().subtract(const Duration(hours: 3)),
+        //     updatedAt: DateTime.now().subtract(const Duration(hours: 3)),
+        //   ),
+        // ];
         if (newItems.isEmpty) {
           pagingController.appendLastPage(newItems);
         } else {
@@ -33,7 +57,6 @@ class NotificationController extends GetxController {
       isLoading = false;
     }
   }
-
 
   @override
   void onInit() {

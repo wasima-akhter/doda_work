@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:doda_work/views/profile/controller/profile_controller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -38,16 +39,34 @@ class UpdateController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    nameController.text = Get.find<ProfileController>().userProfileModel.value?.data?.name ?? "";
-    numberController.text = Get.find<ProfileController>().userProfileModel.value?.data?.phoneNumber ?? "";
-    updatedDate.value = Get.find<ProfileController>().userProfileModel.value?.data?.dateOfBirth ?? "";
+    nameController.text =
+        Get.find<ProfileController>().userProfileModel.value?.data?.name ?? "";
+    numberController.text =
+        Get.find<ProfileController>()
+            .userProfileModel
+            .value
+            ?.data
+            ?.phoneNumber ??
+        "";
+    updatedDate.value =
+        Get.find<ProfileController>()
+            .userProfileModel
+            .value
+            ?.data
+            ?.dateOfBirth ??
+        "";
 
-    final lat = Get.find<ProfileController>().userProfileModel.value?.data?.latitude;
-    final lng = Get.find<ProfileController>().userProfileModel.value?.data?.longitude;
+    final lat =
+        Get.find<ProfileController>().userProfileModel.value?.data?.latitude;
+    final lng =
+        Get.find<ProfileController>().userProfileModel.value?.data?.longitude;
 
     if (lat != null && lng != null) {
       selectedLatLng.value = LatLng(double.parse(lat), double.parse(lng));
-      _getAddressFromLatLng(double.parse(lat), double.parse(lng)); // ✅ real address fetch
+      _getAddressFromLatLng(
+        double.parse(lat),
+        double.parse(lng),
+      ); // ✅ real address fetch
     }
 
     emailController.addListener(() {

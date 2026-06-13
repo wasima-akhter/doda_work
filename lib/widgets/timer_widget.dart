@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:doda_work/core/themes/token.dart';
 import 'package:doda_work/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   @override
   void initState() {
     super.initState();
-    totalTimeInSeconds = _parseTime('00:180');
+    totalTimeInSeconds = _parseTime('00:60');
     startTimer();
   }
 
@@ -50,7 +51,7 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   void resetTimer() {
     setState(() {
-      totalTimeInSeconds = _parseTime('00:180');
+      totalTimeInSeconds = _parseTime('00:60');
       showResend = false; // Hide "Resend" and show the timer again
     });
     startTimer();

@@ -48,6 +48,12 @@ class LoginController extends GetxController {
       emailController.text = "xyzt@yopmail.com";
       passwordController.text = "123456";
     }
+
+    if (AppStorage.rememberMe) {
+      rememberMe.value = true;
+      emailController.text = AppStorage.savedEmail;
+      passwordController.text = AppStorage.savedPassword;
+    }
     super.onInit();
   }
 
@@ -60,6 +66,7 @@ class LoginController extends GetxController {
       isLoading: isLoading,
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
+      rememberMe: rememberMe.value,
     );
   }
 

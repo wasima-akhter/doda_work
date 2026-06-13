@@ -1,4 +1,3 @@
-
 import '../../../../core/utils/basic_import.dart';
 import '../../../../widgets/web_vew_page_widget.dart';
 import '../controller/register_controller.dart';
@@ -16,16 +15,17 @@ class ButtonAndTextSectionView extends GetView<RegisterController> {
           isError: controller.isError,
           mainText: 'DodaWork',
           termsTap: () {
-            Get.to(() => const WebViewScreen(
-              url: 'https://flutter.dev/',
-              title: 'https://dodawork.com/terms-conditions',
-            ),
+            Get.to(
+              () => const WebViewScreen(
+                url: 'https://dodawork.ca/terms',
+                title: 'Terms & Conditions',
+              ),
             );
           },
           policyTap: () {
             Get.to(
-                  () => const WebViewScreen(
-                url: 'https://dodawork.com/privacy-policy',
+              () => const WebViewScreen(
+                url: 'https://dodawork.ca/privacy',
                 title: 'Privacy Policy',
               ),
             );
@@ -34,7 +34,7 @@ class ButtonAndTextSectionView extends GetView<RegisterController> {
 
         Space.height.v20,
         Obx(
-              () => PrimaryButtonWidget(
+          () => PrimaryButtonWidget(
             isLoading: controller.isLoading.value,
             title: "Next",
             onPressed: () {
@@ -43,7 +43,9 @@ class ButtonAndTextSectionView extends GetView<RegisterController> {
                   controller.registerProcess();
                 } else {
                   controller.isError.value = true;
-                  CustomSnackBar.error('Please review the Privacy Policy and accept the Terms and Conditions to proceed');
+                  CustomSnackBar.error(
+                    'Please review the Privacy Policy and accept the Terms and Conditions to proceed',
+                  );
                 }
               }
             },
@@ -53,8 +55,6 @@ class ButtonAndTextSectionView extends GetView<RegisterController> {
     );
   }
 }
-
-
 
 class TermsAndPolicyWidget extends StatelessWidget {
   final RxBool isChecked;
@@ -102,7 +102,7 @@ class TermsAndPolicyWidget extends StatelessWidget {
                   color: isError.value ? errorColor : CustomColors.disableColor,
                   width: 1.4.w,
                 ),
-                onChanged: (_) => _toggle(), 
+                onChanged: (_) => _toggle(),
               ),
             ),
           ),

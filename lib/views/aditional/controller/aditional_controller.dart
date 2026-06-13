@@ -1,14 +1,15 @@
 import 'dart:io';
+
 import 'package:doda_work/core/api/services/api.dart';
 import 'package:doda_work/core/utils/app_storage.dart';
 import 'package:doda_work/core/utils/basic_import.dart';
 import 'package:doda_work/views/aditional/model/provider_register_model.dart';
 import 'package:doda_work/views/aditional/model/service_category_model.dart';
-import 'package:doda_work/views/auth/register/controller/register_controller.dart';
+import 'package:doda_work/widgets/success_dialog.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../../../routes/routes.dart';
-import 'package:doda_work/widgets/success_dialog.dart';
 
 class AditionalController extends GetxController {
   RxInt currentStep = 0.obs; // 0: Form, 1: Preview
@@ -106,6 +107,12 @@ class AditionalController extends GetxController {
     getServiceCategory();
   }
 
+  @override
+  void onReady() {
+    currentStep.value = 0;
+    super.onReady();
+  }
+
   Future<ServiceCategoryModel> getServiceCategory() async {
     return ApiRequest.get(
       fromJson: ServiceCategoryModel.fromJson,
@@ -140,11 +147,17 @@ class AditionalController extends GetxController {
 
   bool isFormValid() {
     if (selectedServiceList.isEmpty) {
-      _showSnackbar("Missing Service", "Please select at least one service category.");
+      _showSnackbar(
+        "Missing Service",
+        "Please select at least one service category.",
+      );
       return false;
     }
     if (availabilityMap.isEmpty) {
-      _showSnackbar("Missing Availability", "Please set your working hours for at least one day.");
+      _showSnackbar(
+        "Missing Availability",
+        "Please set your working hours for at least one day.",
+      );
       return false;
     }
     if (selectedAddress.value.isEmpty || selectedLatLng.value == null) {
@@ -156,7 +169,10 @@ class AditionalController extends GetxController {
       return false;
     }
     if (photos.isEmpty) {
-      _showSnackbar("Missing Attachments", "Please add your license or certificate photo.");
+      _showSnackbar(
+        "Missing Attachments",
+        "Please add your license or certificate photo.",
+      );
       return false;
     }
     return true;
@@ -171,15 +187,16 @@ class AditionalController extends GetxController {
     );
   }
 
-
   // ------------------------ Provider Register API ------------------------
   RxBool providerRegIsLoading = false.obs;
 
   providerRegisterProcess() async {
     // ✅ Check if token exists from user registration
-    final userToken =  AppStorage.token;
+    final userToken = AppStorage.token;
 
-    debugPrint('🔐 Using Token: ${userToken.isEmpty ? "NO TOKEN" : "TOKEN EXISTS"}');
+    debugPrint(
+      '🔐 Using Token: ${userToken.isEmpty ? "NO TOKEN" : "TOKEN EXISTS"}',
+    );
 
     return await ApiRequest.multiMultipartRequest(
       fromJson: ProviderRegisterModel.fromJson,
@@ -187,7 +204,9 @@ class AditionalController extends GetxController {
       isLoading: providerRegIsLoading,
       files: {},
       body: {
-        "companyName": Get.find<RegisterController>().nameController.text,
+        // "companyName": Get.find<RegisterController>().nameController.text,
+        "companyName": AppStorage.savedName ?? 'UnNamed',
+
         "website": linkController.text,
         "serviceCategories": selectedServiceList,
         "serviceLocation": selectedAddress.value,
@@ -198,15 +217,14 @@ class AditionalController extends GetxController {
         "latitude": selectedLatLng.value?.latitude.toString() ?? "",
         "longitude": selectedLatLng.value?.longitude.toString() ?? "",
       },
-      filesList: {
-        "attachments": photos,
-      },
+      filesList: {"attachments": photos},
       reqType: 'POST',
       token: userToken, // ✅ Pass the user token explicitly
       onSuccess: (result) {
         SuccessDialog.show(
           title: "Application Submitted",
-          subtitle: "Your application is under review, and we will inform you when complete.",
+          subtitle:
+              "Your application is under review, and we will inform you when complete.",
           onTap: () => Get.offAllNamed(Routes.loginScreen),
         );
       },

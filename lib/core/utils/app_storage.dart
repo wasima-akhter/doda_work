@@ -1,4 +1,5 @@
 import 'package:get_storage/get_storage.dart';
+
 import 'app_storage_model.dart';
 
 class AppStorage {
@@ -19,6 +20,27 @@ class AppStorage {
   static const String _isVendorKey = 'isVendor';
   static const String _profileKey = 'profile';
   static const String _roleKey = 'role';
+
+  static const String _rememberMeKey = 'rememberMe';
+  static const String _savedEmailKey = 'savedEmail';
+  static const String _savedPasswordKey = 'savedPassword';
+
+  static const String _savedNameKey = 'savedName';
+
+  // ========================= REMEMBER ME =========================
+  static bool get rememberMe => _storage.read(_rememberMeKey) ?? false;
+  static set rememberMe(bool value) => _storage.write(_rememberMeKey, value);
+
+  static String get savedEmail => _storage.read(_savedEmailKey) ?? '';
+  static set savedEmail(String value) => _storage.write(_savedEmailKey, value);
+
+  // name company name
+  static String get savedName => _storage.read(_savedNameKey) ?? '';
+  static set savedName(String value) => _storage.write(_savedNameKey, value);
+
+  static String get savedPassword => _storage.read(_savedPasswordKey) ?? '';
+  static set savedPassword(String value) =>
+      _storage.write(_savedPasswordKey, value);
 
   // ========================= SAVE DATA =========================
   static Future<void> save({

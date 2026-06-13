@@ -333,11 +333,17 @@ class WorkingHoursDayTimeBar extends StatelessWidget {
                 Expanded(
                   child: InkWell(
                     onTap: () async {
+                      print('TAPPED START TIME');
                       final initial = item.startTime.isNotEmpty
                           ? parsePickedTime(item.startTime)
                           : const TimeOfDay(hour: 9, minute: 0);
+                      debugPrint('Before picker');
+                      debugPrint(' initial: $initial ');
 
                       final picked = await pickAppTime(context, initial);
+
+                      debugPrint('After picker');
+                      debugPrint('picked : $picked');
 
                       if (picked != null) {
                         item.startTime =

@@ -96,11 +96,6 @@ class Helpers {
   }
 }
 
-TimeOfDay parsePickedTime(String time) {
-  final parts = time.split(":");
-  return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-}
-
 Future<TimeOfDay?> pickAppTime(BuildContext context, TimeOfDay initial) {
   return showTimePicker(
     context: context,
@@ -144,16 +139,66 @@ Future<TimeOfDay?> pickAppTime(BuildContext context, TimeOfDay initial) {
   );
 }
 
+TimeOfDay parsePickedTime(String time) {
+  try {
+    // Handles "08:44 AM"
+    if (time.toUpperCase().contains('AM') ||
+        time.toUpperCase().contains('PM')) {
+      final parts = time.split(' ');
+      final hm = parts[0].split(':');
+
+      int hour = int.parse(hm[0]);
+      final minute = int.parse(hm[1]);
+
+      final period = parts[1].toUpperCase();
+
+      if (period == 'PM' && hour != 12) {
+        hour += 12;
+      }
+
+      if (period == 'AM' && hour == 12) {
+        hour = 0;
+      }
+
+      return TimeOfDay(hour: hour, minute: minute);
+    }
+
+    // Handles "08:44"
+    final hm = time.split(':');
+
+    return TimeOfDay(
+      hour: int.tryParse(hm[0]) ?? 0,
+      minute: int.tryParse(hm[1]) ?? 0,
+    );
+  } catch (_) {
+    return const TimeOfDay(hour: 9, minute: 0);
+  }
+}
+
 //
-String formatTime(String time24) {
-  final parts = time24.split(":");
-  final hour = int.parse(parts[0]);
-  final minute = int.parse(parts[1]);
+String formatTime(String? time) {
+  if (time == null || time.isEmpty) return '--';
 
-  final time = TimeOfDay(hour: hour, minute: minute);
+  try {
+    if (time.toUpperCase().contains('AM') ||
+        time.toUpperCase().contains('PM')) {
+      return time;
+    }
 
-  final now = DateTime(0, 0, 0, time.hour, time.minute);
+    final hm = time.split(':');
 
-  final formatted = TimeOfDay.fromDateTime(now).format(Get.context!);
-  return formatted;
+    final hour = int.tryParse(hm[0]) ?? 0;
+    final minute = int.tryParse(hm[1]) ?? 0;
+
+    final tod = TimeOfDay(hour: hour, minute: minute);
+
+    final period = tod.period == DayPeriod.am ? 'AM' : 'PM';
+
+    int displayHour = tod.hourOfPeriod;
+    if (displayHour == 0) displayHour = 12;
+
+    return '$displayHour:${minute.toString().padLeft(2, '0')} $period';
+  } catch (_) {
+    return time;
+  }
 }

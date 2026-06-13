@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:doda_work/core/api/services/api.dart';
 import 'package:doda_work/core/utils/app_storage.dart';
 import 'package:doda_work/core/utils/basic_import.dart';
@@ -55,13 +57,12 @@ class ProfileController extends GetxController {
         endPoint: ApiEndPoints.providerProfile,
         isLoading: isLoading,
         onSuccess: (result) {
+          log("result: $result");
           providerProfileModel.value = result;
 
           final serverValue = result.data.isOnline;
 
-          if (serverValue != null) {
-            isOnline.value = serverValue;
-          }
+          isOnline.value = serverValue;
         },
       );
     } catch (e) {

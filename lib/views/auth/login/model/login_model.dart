@@ -24,10 +24,7 @@ class LoginData {
   final User user;
   final String accessToken;
 
-  LoginData({
-    required this.user,
-    required this.accessToken,
-  });
+  LoginData({required this.user, required this.accessToken});
 
   factory LoginData.fromJson(Map<String, dynamic> json) {
     return LoginData(
@@ -36,10 +33,7 @@ class LoginData {
     );
   }
 
-  factory LoginData.empty() => LoginData(
-    user: User.empty(),
-    accessToken: '',
-  );
+  factory LoginData.empty() => LoginData(user: User.empty(), accessToken: '');
 }
 
 class User {
@@ -78,10 +72,8 @@ class User {
       favorites: json['favorites'] != null
           ? Favorites.fromJson(json['favorites'])
           : Favorites.empty(),
-      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ??
-          DateTime.now(),
-      updatedAt: DateTime.tryParse(json['updatedAt'] ?? '') ??
-          DateTime.now(),
+      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(json['updatedAt'] ?? '') ?? DateTime.now(),
     );
   }
 
@@ -105,6 +97,7 @@ class AuthId {
   final String? phoneNumber;
   final String role;
   final bool isActive;
+  final bool isVerified;
   final bool isBlocked;
 
   AuthId({
@@ -115,6 +108,7 @@ class AuthId {
     required this.role,
     required this.isActive,
     required this.isBlocked,
+    required this.isVerified,
   });
 
   factory AuthId.fromJson(Map<String, dynamic> json) {
@@ -126,6 +120,7 @@ class AuthId {
       role: json['role'] ?? '',
       isActive: json['isActive'] ?? false,
       isBlocked: json['isBlocked'] ?? false,
+      isVerified: json["isVerified"] ?? false,
     );
   }
 
@@ -137,6 +132,7 @@ class AuthId {
     role: '',
     isActive: false,
     isBlocked: false,
+    isVerified: false,
   );
 }
 

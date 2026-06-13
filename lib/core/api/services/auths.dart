@@ -1,19 +1,29 @@
 import 'package:doda_work/core/api/model/basic_success_model.dart';
 import 'package:doda_work/core/utils/message_helper.dart';
+import 'package:doda_work/widgets/success_dialog.dart';
+
 import '../../../routes/routes.dart';
 import '../../../views/auth/login/model/login_model.dart';
 import '../../../views/auth/register/model/provider_otp_verify_model.dart';
 import '../../utils/app_storage.dart';
 import '../../utils/basic_import.dart';
 import 'api.dart';
-import 'package:doda_work/widgets/success_dialog.dart';
+
+class OtpRequiredException implements Exception {
+  final String message;
+  final String email;
+
+  OtpRequiredException(this.message, this.email);
+}
 
 class AuthService {
   /// =============================================== ✅ Login  ================================================== ///
+  /*
   static Future<LoginModel> loginService({
     required RxBool isLoading,
     required String email,
     required String password,
+    required bool rememberMe,
   }) async {
     Map<String, dynamic> inputBody = {'email': email, 'password': password};
     return await ApiRequest.post(
@@ -21,7 +31,8 @@ class AuthService {
       endPoint: ApiEndPoints.login,
       isLoading: isLoading,
       body: inputBody,
-      onSuccess: (result) {
+
+      onSuccess: (result) async {
         final role = result.data.user.authId.role.toUpperCase();
         final id = result.data.user.id;
 
@@ -34,20 +45,88 @@ class AuthService {
           return;
         }
 
-        AppStorage.save(uId: id);
-        AppStorage.save(token: result.data.accessToken, isLoggedIn: true);
-        AppStorage.saveRole(role);
+        await AppStorage.save(uId: id);
+        await AppStorage.save(token: result.data.accessToken, isLoggedIn: true);
+        await AppStorage.saveRole(role);
         AppStorage.isVendor = role == "PROVIDER";
 
-        if (role == "PROVIDER") {
-          Get.offAllNamed(Routes.navigationScreen);
-        } else if (role == "USER") {
+        if (rememberMe) {
+          AppStorage.rememberMe = true;
+          AppStorage.savedEmail = email;
+          AppStorage.savedPassword = password;
+        } else {
+          AppStorage.rememberMe = false;
+          AppStorage.savedEmail = '';
+          AppStorage.savedPassword = '';
+        }
+
+        if (role == "PROVIDER" || role == "USER") {
           Get.offAllNamed(Routes.navigationScreen);
         } else {
           MessageHelper.showError("Please Select Your Role.\nThank you");
         }
       },
     );
+  }
+*/
+  static Future<LoginModel> loginService({
+    required RxBool isLoading,
+    required String email,
+    required String password,
+    required bool rememberMe,
+  }) async {
+    try {
+      return await ApiRequest.post(
+        fromJson: LoginModel.fromJson,
+        endPoint: ApiEndPoints.login,
+        isLoading: isLoading,
+        body: {'email': email, 'password': password},
+
+        onSuccess: (result) async {
+          // existing success logic (UNCHANGED)
+
+          final role = result.data.user.authId.role.toUpperCase();
+          final id = result.data.user.id;
+
+          final selectedRole = AppStorage.users.toUpperCase();
+
+          if (role != selectedRole) {
+            MessageHelper.showError(
+              "This account is registered as a ${role == 'PROVIDER' ? 'Service Provider' : 'Client'}.\nPlease use the correct login option.",
+            );
+            return;
+          }
+
+          await AppStorage.save(uId: id);
+          await AppStorage.save(
+            token: result.data.accessToken,
+            isLoggedIn: true,
+          );
+          await AppStorage.saveRole(role);
+          AppStorage.isVendor = role == "PROVIDER";
+
+          if (rememberMe) {
+            AppStorage.rememberMe = true;
+            AppStorage.savedEmail = email;
+            AppStorage.savedPassword = password;
+          }
+
+          if (role == "PROVIDER" || role == "USER") {
+            Get.offAllNamed(Routes.navigationScreen);
+          }
+        },
+      );
+    } on OtpRequiredException catch (e) {
+      // ============================
+      // 🔥 OTP FLOW HERE
+      // ============================
+
+      await AuthService.resendOtpService(isLoading: isLoading, email: e.email);
+
+      Get.toNamed(Routes.verifyScreen, arguments: {"email": email});
+
+      rethrow;
+    }
   }
 
   /// =============================================== ✅ Register  ================================================== ///
@@ -76,7 +155,9 @@ class AuthService {
       isLoading: isLoading,
       body: inputBody,
       onSuccess: (result) {
-        Get.toNamed(Routes.verifyScreen);
+        Get.toNamed(Routes.verifyScreen, arguments: {"email": email});
+
+        AppStorage.savedName = name;
       },
     );
   }
@@ -93,7 +174,10 @@ class AuthService {
       endPoint: ApiEndPoints.forgotPassword,
       isLoading: isLoading,
       body: inputBody,
-      onSuccess: (result) => Get.toNamed(Routes.otpScreen),
+      onSuccess: (result) => Get.toNamed(
+        Routes.otpScreen,
+        arguments: {"email": email, "type": "forgot"},
+      ),
     );
   }
 
@@ -115,7 +199,8 @@ class AuthService {
       body: inputBody,
       onSuccess: (result) {
         if (AppStorage.users == "PROVIDER") {
-          Get.toNamed(Routes.aditionalScreen);
+          // Get.toNamed(Routes.aditionalScreen);
+          Get.offAllNamed(Routes.aditionalScreen);
         } else {
           SuccessDialog.show(
             title: "Registration Successful",

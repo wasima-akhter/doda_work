@@ -1,14 +1,16 @@
 import 'dart:io';
+
 import 'package:doda_work/core/utils/basic_import.dart';
 import 'package:doda_work/routes/routes.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+
 import '../../category/controller/category_controller.dart';
 
 class RequestController extends GetxController {
-  final Rxn<DateTime?> startDateTime = Rxn<DateTime>(null);
-  final Rxn<DateTime?> endDateTime = Rxn<DateTime>(null);
+  final Rxn<DateTime> startDateTime = Rxn<DateTime>();
+  final Rxn<DateTime> endDateTime = Rxn<DateTime>();
   final RxString selectedPriority = ''.obs;
   final RxString selectedCategoryId = ''.obs;
   final RxString selectedSubCategoryId = ''.obs;
@@ -18,9 +20,6 @@ class RequestController extends GetxController {
 
   final RxString selectedAddress = "".obs;
   final Rxn<LatLng> selectedLatLng = Rxn<LatLng>();
-
-
-
 
   void onCategorySelected(String categoryId) {
     selectedCategoryId.value = categoryId;
@@ -86,8 +85,6 @@ class RequestController extends GetxController {
     );
   }
 
-
-
   RxList<File> photos = <File>[].obs;
   final ImagePicker _picker = ImagePicker();
 
@@ -113,11 +110,9 @@ class RequestController extends GetxController {
     selectedLatLng.value = null;
     selectedAddress.value = '';
 
-
     photos.clear();
     currentStep.value = 0;
   }
-
 
   final RxBool isLoading = false.obs;
 
@@ -181,8 +176,6 @@ class RequestController extends GetxController {
       isLoading.value = false;
     }
   }
-
-
 
   final RxString postalCode = ''.obs;
 

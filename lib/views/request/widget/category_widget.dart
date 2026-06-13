@@ -89,7 +89,11 @@ class _MultiSelectDropDownWidgetState extends State<MultiSelectDropDownWidget> {
                 shape: StadiumBorder(
                   side: BorderSide(color: CustomColors.primary, width: 1),
                 ),
-                deleteIcon: Icon(Icons.close, size: 16, color: CustomColors.primary),
+                deleteIcon: Icon(
+                  Icons.close,
+                  size: 16,
+                  color: CustomColors.primary,
+                ),
                 onDeleted: () => _toggleValue(item),
               );
             }).toList(),
@@ -123,6 +127,7 @@ class _MultiSelectDropDownWidgetState extends State<MultiSelectDropDownWidget> {
                 color: Colors.grey,
                 fontSize: width * 0.04,
               ),
+              /*
               items: widget.items.map((item) {
                 return DropdownMenuItem(
                   value: item,
@@ -145,6 +150,38 @@ class _MultiSelectDropDownWidgetState extends State<MultiSelectDropDownWidget> {
                   ),
                 );
               }).toList(),
+*/
+              items: widget.items.map((item) {
+                return DropdownMenuItem(
+                  value: item,
+                  enabled: true,
+                  child: StatefulBuilder(
+                    builder: (context, menuSetState) {
+                      final isChecked = _selectedValues.contains(item);
+                      return Row(
+                        children: [
+                          Checkbox(
+                            value: isChecked,
+                            activeColor: CustomColors.primary,
+                            onChanged: (_) {
+                              _toggleValue(item);
+                              menuSetState(() {}); // rebuild this menu item
+                            },
+                          ),
+                          Expanded(
+                            child: TextWidget(
+                              item,
+                              fontSize: Dimensions.titleSmall,
+                              color: CustomColors.blackColor,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              }).toList(),
+
               onChanged: (value) {
                 if (value != null) _toggleValue(value);
               },

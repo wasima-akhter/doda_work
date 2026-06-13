@@ -1,15 +1,20 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
+
 import '../../utils/app_storage.dart';
 import '../../utils/basic_import.dart';
+import 'auths.dart';
 
 class ApiRequest {
   /// ✅ Header Generator with skipAuth option
-  static Future<Map<String, String>> _bearerHeaderInfo(
-      [String? token, bool skipAuth = false]) async {
+  static Future<Map<String, String>> _bearerHeaderInfo([
+    String? token,
+    bool skipAuth = false,
+  ]) async {
     final authToken = token ?? AppStorage.token;
     return {
       HttpHeaders.acceptHeader: "application/json",
@@ -25,24 +30,30 @@ class ApiRequest {
       debugPrint("🔹 '$key': '$value'");
     });
     debugPrint(
-        '╚════════════════════════════════════════════════════════════════════════════════════════════╚═══');
+      '╚════════════════════════════════════════════════════════════════════════════════════════════╚═══',
+    );
   }
 
   static void printUrl(String url) {
     debugPrint(
-        '╔════════════════════════════════════════════════════════════════════════════════════════════');
+      '╔════════════════════════════════════════════════════════════════════════════════════════════',
+    );
     debugPrint("📍 'End Point': '$url'");
   }
 
   static void printBodyLineByLine(Map<String, dynamic> body) {
     body.forEach((key, value) {
       debugPrint("🔹 '$key': '$value'");
-      debugPrint('╚════════════════════════════════════════════════════════════════');
+      debugPrint(
+        '╚════════════════════════════════════════════════════════════════',
+      );
     });
   }
 
   static void printEndPointLog(String url) {
-    debugPrint('╔════════════════════════════════════════════════════════════════');
+    debugPrint(
+      '╔════════════════════════════════════════════════════════════════',
+    );
     debugPrint("📍 'End Point': '$url'");
   }
 
@@ -84,22 +95,27 @@ class ApiRequest {
       printEndPointLog(uri.toString());
       printBodyLineByLine(body);
 
-      final response = await http.post(
-        uri,
-        headers: await _bearerHeaderInfo(null, skipAuth),
-        body: jsonEncode(body),
-      ).timeout(const Duration(seconds: 120));
+      final response = await http
+          .post(
+            uri,
+            headers: await _bearerHeaderInfo(null, skipAuth),
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 120));
 
-      debugPrint('|📬|---------[ RESPONSE STATUS: ${response
-          .statusCode} ]---------|📬|');
-      debugPrint('|📬|---------[ RESPONSE BODY: ${response.body} ]---------|📬|');
+      debugPrint(
+        '|📬|---------[ RESPONSE STATUS: ${response.statusCode} ]---------|📬|',
+      );
+      debugPrint(
+        '|📬|---------[ RESPONSE BODY: ${response.body} ]---------|📬|',
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> json = jsonDecode(response.body);
         final result = fromJson(json);
 
-        final successMessage = json['message'] ??
-            Strings.requestCompletedSuccessfully;
+        final successMessage =
+            json['message'] ?? Strings.requestCompletedSuccessfully;
         if (showSuccessSnackBar) {
           CustomSnackBar.success(
             title: Strings.success,
@@ -109,15 +125,46 @@ class ApiRequest {
 
         if (onSuccess != null) onSuccess(result);
         return result;
+        // } else {
+        //   final error = jsonDecode(response.body);
+        //   final errorMessage = error['message'] ?? 'Something went wrong!';
+        //   debugPrint('❌ Error: $errorMessage');
+        //   CustomSnackBar.error(errorMessage);
+        //   throw Exception(errorMessage);
+        // }
       } else {
-        final error = jsonDecode(response.body);
+        final Map<String, dynamic> error = jsonDecode(response.body ?? '{}');
+
         final errorMessage = error['message'] ?? 'Something went wrong!';
+
         debugPrint('❌ Error: $errorMessage');
-        CustomSnackBar.error(errorMessage);
-        throw Exception(errorMessage);
+
+        // ============================
+        // 🔥 OTP ACTIVATION CASE
+        // ============================
+        if (errorMessage.toString().toLowerCase().contains("activate")) {
+          debugPrint(' activate  ');
+          throw OtpRequiredException(
+            errorMessage.toString(),
+            body['email'].toString() ?? '',
+          );
+        }
+
+        CustomSnackBar.error(errorMessage.toString());
+        return fromJson({
+          "statusCode": response.statusCode,
+          "success": false,
+          "message": errorMessage,
+          "data": null,
+        });
       }
     } catch (e) {
       debugPrint('🐞🐞🐞 UNHANDLED ERROR: ${e.toString()}');
+
+      if (e is OtpRequiredException) {
+        CustomSnackBar.error(e.message.toString());
+        rethrow;
+      }
       CustomSnackBar.error(e.toString());
       throw Exception(e.toString());
     } finally {
@@ -147,7 +194,7 @@ class ApiRequest {
       }
       final uri = Uri.parse(fullUrl).replace(
         queryParameters: queryParams?.map(
-              (key, value) => MapEntry(key, value.toString()),
+          (key, value) => MapEntry(key, value.toString()),
         ),
       );
 
@@ -224,10 +271,10 @@ class ApiRequest {
 
       final response = await http
           .patch(
-        uri,
-        headers: await _bearerHeaderInfo(),
-        body: jsonEncode(body),
-      )
+            uri,
+            headers: await _bearerHeaderInfo(),
+            body: jsonEncode(body),
+          )
           .timeout(const Duration(seconds: 120));
 
       debugPrint('|✅|---------[ ✅ PATCH REQUEST COMPLETED ]---------|✅|');
@@ -333,6 +380,12 @@ class ApiRequest {
       isLoading.value = true;
       debugPrint('|📤|---------[ 📦 DELETE REQUEST STARTED ]---------|📤|');
 
+      final token = AppStorage.token;
+
+      if (token.isEmpty) {
+        throw Exception("Token missing");
+      }
+
       final uri = Uri.parse(
         '${ApiEndPoints.baseUrl}$endPoint',
       ).replace(queryParameters: queryParams);
@@ -342,10 +395,10 @@ class ApiRequest {
 
       final response = await http
           .delete(
-        uri,
-        headers: await _bearerHeaderInfo(),
-        body: body != null ? jsonEncode(body) : null,
-      )
+            uri,
+            headers: await _bearerHeaderInfo(),
+            body: body != null ? jsonEncode(body) : null,
+          )
           .timeout(const Duration(seconds: 120));
 
       debugPrint('|✅|---------[ ✅ DELETE REQUEST COMPLETED ]---------|✅|');
@@ -404,7 +457,9 @@ class ApiRequest {
     try {
       isLoading.value = true;
       final headers = await _bearerHeaderInfo(
-          token, skipAuth); // ✅ Pass skipAuth
+        token,
+        skipAuth,
+      ); // ✅ Pass skipAuth
 
       // Build URL
       String fullUrl = '${ApiEndPoints.baseUrl}$endPoint';
@@ -504,8 +559,8 @@ class ApiRequest {
         final result = fromJson(json);
 
         if (showSuccessSnackBar) {
-          final successMessage = json['message'] ??
-              'Request completed successfully';
+          final successMessage =
+              json['message'] ?? 'Request completed successfully';
           CustomSnackBar.success(title: 'Success', message: successMessage);
         }
 

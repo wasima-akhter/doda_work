@@ -34,95 +34,17 @@ class VendorProfileController extends GetxController {
   final RxBool isLoading = false.obs;
   final Rxn<LatLng> selectedLatLng = Rxn<LatLng>();
   final RxString selectedAddress = "".obs;
-  final RxList selectedServiceList = [].obs;
-  /*
+  // final RxList selectedServiceList = [].obs;
+  final RxList<String> selectedServiceList = <String>[].obs;
+
   @override
   void onInit() {
     super.onInit();
-
-    getServiceCategory();
-
-    // Debug: Print current storage state
-    debugPrint('🔐 Storage State:');
-    debugPrint(
-      '   Token: ${AppStorage.token.isNotEmpty ? "Present" : "Empty"}',
-    );
-    debugPrint('   Token: ${AppStorage.token}');
-    debugPrint('   Is Vendor: ${AppStorage.isVendor}');
-    debugPrint('   Is Logged In: ${AppStorage.isLoggedIn}');
-
-    nameController.text =
-        Get.find<ProfileController>()
-            .providerProfileModel
-            .value
-            ?.data
-            .companyName ??
-        "";
-    contactPersonController.text =
-        Get.find<ProfileController>()
-            .providerProfileModel
-            .value
-            ?.data
-            .contactPerson ??
-        "";
-    coveredRadius.text =
-        Get.find<ProfileController>()
-            .providerProfileModel
-            .value
-            ?.data
-            .coveredRadius
-            .toString() ??
-        "";
-    websiteController.text =
-        Get.find<ProfileController>().providerProfileModel.value?.data.website
-            .toString() ??
-        "";
-    selectedAddress.value =
-        Get.find<ProfileController>()
-            .providerProfileModel
-            .value
-            ?.data
-            .serviceLocation ??
-        "";
-
-    final lat =
-        Get.find<ProfileController>().providerProfileModel.value?.data.latitude;
-    final lng = Get.find<ProfileController>()
-        .providerProfileModel
-        .value
-        ?.data
-        .longitude;
-
-    if (lat != null && lng != null) {
-      selectedLatLng.value = LatLng(lat, lng);
-    }
-
-    selectedServiceList.addAll(
-      (Get.find<ProfileController>()
-                  .providerProfileModel
-                  .value
-                  ?.data
-                  .serviceCategories ??
-              [])
-          .map((e) => e.id)
-          .toList(),
-    );
-
-    emailController.addListener(() {
-      final email = emailController.text.trim();
-      isEmailValid.value = GetUtils.isEmail(email);
-    });
-
-    // workingHours:
-    initializeWorkingHours();
+    _initData();
   }
-*/
-  @override
-  void onInit() {
-    super.onInit();
 
-    getServiceCategory();
-
+  Future<void> _initData() async {
+    await getServiceCategory();
     populateFormData();
   }
 
@@ -137,6 +59,10 @@ class VendorProfileController extends GetxController {
         Get.find<ProfileController>().providerProfileModel.value?.data;
 
     if (profile == null) return;
+
+    debugPrint(
+      ' profile.serviceCategories : ${profile.serviceCategories.length} ',
+    );
 
     nameController.text = profile.companyName ?? "";
     contactPersonController.text = profile.contactPerson ?? "";
@@ -159,7 +85,7 @@ class VendorProfileController extends GetxController {
   // Other variables
   final _imagePicker = ImagePicker();
   bool isPickingImage = false;
-  List<ServiceCategory> serviceCategoryList = [];
+  final serviceCategoryList = <ServiceCategory>[].obs;
   ProviderUpdateProfileModel? providerUpdateProfileModel;
 
   Future<void> pickImg() async {
@@ -194,7 +120,7 @@ class VendorProfileController extends GetxController {
       endPoint: ApiEndPoints.serviceCategory,
       isLoading: isLoading,
       onSuccess: (result) {
-        serviceCategoryList.addAll(result.category);
+        serviceCategoryList.assignAll(result.category);
         debugPrint('✅ Loaded ${serviceCategoryList.length} service categories');
       },
     );
@@ -248,6 +174,7 @@ class VendorProfileController extends GetxController {
     debugPrint('   Success: ${response.success}');
     debugPrint('   Message: ${response.message}');
     debugPrint('   Data Message: ${response.data.message}');
+    clearAll();
     //
     // Get.close(1);
     refreshProfileData();
@@ -267,6 +194,28 @@ class VendorProfileController extends GetxController {
 
     // fetch profile info again.
     // Get.find<ProfileController>().getProviderProfile();
+  }
+
+  void clearAll() {
+    nameController.clear();
+    contactPersonController.clear();
+    coveredRadius.clear();
+    websiteController.clear();
+    locationController.clear();
+    emailController.clear();
+    numberController.clear();
+
+    nameFocus.unfocus();
+    locationFocus.unfocus();
+    emailFocus.unfocus();
+    numberFocus.unfocus();
+
+    isEmailValid.value = false;
+    selectedImg.value = null;
+    isLoading.value = false;
+    selectedLatLng.value = null;
+    selectedAddress.value = '';
+    selectedServiceList.clear();
   }
 
   String? _getAuthToken() {

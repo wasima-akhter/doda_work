@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+
 import 'core/utils/basic_import.dart';
 import 'initial.dart';
 import 'routes/routes.dart';
@@ -18,12 +19,11 @@ void main() async {
   runApp(const MyApp());
 }
 
- //doda_work1
- //doda_work1
+//doda_work1
+//doda_work1
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
 
   @override
   Widget build(BuildContext context) {

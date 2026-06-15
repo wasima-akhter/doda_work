@@ -1,5 +1,5 @@
 class ApiEndPoints {
-  // static final mainDomain = 'http://3.96.86.190:3001';
+  // static final mainDomain = 'http://10.10.20.52:6002';
   static final mainDomain = 'https://api.dodawork.com';
   static final baseUrl = '$mainDomain/';
 

@@ -10,6 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../routes/routes.dart';
+import '../../auth/register/controller/register_controller.dart';
 
 class AditionalController extends GetxController {
   RxInt currentStep = 0.obs; // 0: Form, 1: Preview
@@ -204,7 +205,9 @@ class AditionalController extends GetxController {
       isLoading: providerRegIsLoading,
       files: {},
       body: {
-        // "companyName": Get.find<RegisterController>().nameController.text,
+        "companyName": (Get.isRegistered<RegisterController>()
+            ? Get.find<RegisterController>().nameController.text
+            : 'UnNamed'),
         // "companyName": AppStorage.savedName ?? 'UnNamed',
         "website": linkController.text,
         "serviceCategories": selectedServiceList,

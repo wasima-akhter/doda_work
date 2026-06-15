@@ -6,6 +6,7 @@ import 'package:doda_work/widgets/success_dialog.dart';
 
 import '../../../routes/routes.dart';
 import '../../../views/auth/login/model/login_model.dart';
+import '../../../views/auth/register/controller/register_controller.dart';
 import '../../../views/auth/register/model/provider_otp_verify_model.dart';
 import '../../utils/app_storage.dart';
 import '../../utils/basic_import.dart';
@@ -124,7 +125,7 @@ class AuthService {
       // ============================
       // 🔥 OTP FLOW HERE
       // ============================
-      AppStorage.savedName = e.companyName;
+      // AppStorage.savedName = e.companyName;
 
       await AuthService.resendOtpService(isLoading: isLoading, email: e.email);
 
@@ -161,7 +162,7 @@ class AuthService {
       body: inputBody,
       onSuccess: (result) {
         Get.toNamed(Routes.verifyScreen, arguments: {"email": email});
-        AppStorage.savedName = name;
+        // AppStorage.savedName = name;
       },
     );
   }
@@ -204,7 +205,18 @@ class AuthService {
       onSuccess: (result) {
         if (AppStorage.users == "PROVIDER") {
           // Get.toNamed(Routes.aditionalScreen);
-          Get.offAllNamed(Routes.aditionalScreen);
+          if ((Get.isRegistered<RegisterController>() &&
+              Get.find<RegisterController>().nameController.text
+                  .trim()
+                  .isNotEmpty)) {
+            debugPrint(
+              ' company name empty logic aditionalScreen --> ${Get.find<RegisterController>().nameController.text}',
+            );
+            Get.offAllNamed(Routes.aditionalScreen);
+          } else {
+            debugPrint(' company name empty logic loginScreen -->  ');
+            Get.offAllNamed(Routes.loginScreen);
+          }
         } else {
           SuccessDialog.show(
             title: "Registration Successful",

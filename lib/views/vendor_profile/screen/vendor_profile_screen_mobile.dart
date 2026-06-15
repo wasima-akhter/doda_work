@@ -208,36 +208,72 @@ class VendorProfileScreenMobile extends GetView<VendorProfileController> {
                       //     controller.selectedServiceList.add(selectedItem.id);
                       //   },
                       // ),
-                      MultiSelectDropDownWidget(
-                        items: controller.serviceCategoryList
+
+                      //
+                      Obx(() {
+                        final selectedIds = controller.selectedServiceList
+                            .toList();
+
+                        final items = controller.serviceCategoryList;
+
+                        final selectedNames = items
+                            .where((e) => selectedIds.contains(e.id))
                             .map((e) => e.name)
-                            .toList(),
-                        label: "Service Category",
-                        initialValues: controller.serviceCategoryList
-                            .where(
-                              (e) =>
-                                  controller.selectedServiceList.contains(e.id),
-                            )
-                            .map((e) => e.name)
-                            .toList(),
-                        onChanged: (List<String> selectedNames) {
-                          controller.selectedServiceList.clear();
+                            .toList();
 
-                          final selectedItems = controller.serviceCategoryList
-                              .where(
-                                (item) => selectedNames.contains(item.name),
-                              )
-                              .toList();
+                        return MultiSelectDropDownWidget(
+                          key: ValueKey(
+                            selectedIds.join(','),
+                          ), // 🔥 CRITICAL FIX
+                          items: items.map((e) => e.name).toList(),
+                          label: "Service Category",
+                          initialValues: selectedNames,
+                          onChanged: (List<String> selectedNames) {
+                            final selectedItems = items
+                                .where(
+                                  (item) => selectedNames.contains(item.name),
+                                )
+                                .toList();
 
-                          controller.selectedServiceList.addAll(
-                            selectedItems.map((e) => e.id),
-                          );
+                            controller.selectedServiceList
+                              ..clear()
+                              ..addAll(selectedItems.map((e) => e.id));
+                          },
+                        );
+                      }),
+                      // Obx(
+                      //   () => MultiSelectDropDownWidget(
+                      //     items: controller.serviceCategoryList
+                      //         .map((e) => e.name)
+                      //         .toList(),
+                      //     label: "Service Category",
+                      //     initialValues: controller.serviceCategoryList
+                      //         .where(
+                      //           (e) => controller.selectedServiceList.contains(
+                      //             e.id,
+                      //           ),
+                      //         )
+                      //         .map((e) => e.name)
+                      //         .toList(),
+                      //     onChanged: (List<String> selectedNames) {
+                      //       controller.selectedServiceList.clear();
 
-                          debugPrint(
-                            "✅ Selected IDs: ${controller.selectedServiceList}",
-                          );
-                        },
-                      ),
+                      //       final selectedItems = controller.serviceCategoryList
+                      //           .where(
+                      //             (item) => selectedNames.contains(item.name),
+                      //           )
+                      //           .toList();
+
+                      //       controller.selectedServiceList.addAll(
+                      //         selectedItems.map((e) => e.id),
+                      //       );
+
+                      //       debugPrint(
+                      //         "✅ Selected IDs: ${controller.selectedServiceList}",
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
                       Space.height.betweenInputBox,
                       Space.height.betweenInputBox,
 
